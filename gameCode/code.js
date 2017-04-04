@@ -6,7 +6,6 @@ window.onload = function() {
     function preload() {
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/levels/tiles.png');;
-        game.load.image('ground', 'assets/platform.png');
         game.load.image('star', 'assets/star.png');
         game.load.image('dungeon', 'assets/dungeon.png')
         game.load.atlasJSONArray('dude', 'assets/knight.png', 'assets/knight.json');
@@ -15,11 +14,11 @@ window.onload = function() {
     let map;
     let tileset;
     let layer;
-    let player; 
-    let platforms; 
-    let cursors; 
-    let stars; 
-    let score = 0; 
+    let player;
+    let platforms;
+    let cursors;
+    let stars;
+    let score = 0;
     let scoreText;
     let bg;
 
@@ -32,13 +31,12 @@ window.onload = function() {
         map = game.add.tilemap('level1');
         map.addTilesetImage('tiles');
 
-             
         layer = map.createLayer('Tile Layer 1');
         game.add.existing(layer);
 
         layer.resizeWorld();
 
-        map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);  
+        map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
 
         //game.add.sprite(0, 0, 'sky');
 
@@ -72,7 +70,7 @@ window.onload = function() {
         stars = game.add.group();
         stars.enableBody = true;
 
-        for (var i = 0; i < 12; i++) 
+        for (var i = 0; i < 12; i++)
         {
             let star = stars.create(i * 70, 0, 'star');
             star.body.gravity.y = 300;
@@ -94,26 +92,26 @@ window.onload = function() {
         player.body.velocity.x = 0;
 
         // Movements of Player
-        if (cursors.left.isDown && player.body.touching.down)
+        if (cursors.left.isDown && player.body.onFloor())
         {
             player.body.velocity.x = -150;
             player.animations.play('left');
             player.scale.x = -1;
         }
-        else if (cursors.left.isDown && !player.body.touching.down)
+        else if (cursors.left.isDown && !player.body.onFloor())
         {
             player.body.velocity.x = -150;
             player.animations.stop();
             player.frame = 2;
             player.scale.x = -1;
         }
-        else if (cursors.right.isDown && player.body.touching.down)
+        else if (cursors.right.isDown && player.body.onFloor())
         {
             player.body.velocity.x = 150;
             player.animations.play('right');
             player.scale.x = 1;
         }
-        else if (cursors.right.isDown && !player.body.touching.down)
+        else if (cursors.right.isDown && !player.body.onFloor())
         {
             player.body.velocity.x = 150;
             player.animations.stop();
@@ -126,9 +124,9 @@ window.onload = function() {
         }
 
         //  Allow the player to jump if they are touching the ground.
-        else if (cursors.up.isDown && player.body.touching.down)
+        else if (cursors.up.isDown && player.body.onFloor())
         {
-            player.body.velocity.y = -250;
+            player.body.velocity.y = -650;
         }
         else
         {
