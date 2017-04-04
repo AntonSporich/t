@@ -4,33 +4,52 @@ window.onload = function() {
     var game = new Phaser.Game(1400, 600, Phaser.CANVAS, 'gameAround', { preload: preload, create: create, update: update });
 
     function preload() {
+        game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('tiles', 'assets/levels/tiles.png');
         game.load.image('ground', 'assets/platform.png');
         game.load.image('star', 'assets/star.png');
+        game.load.image('dungeon', 'assets/dungeon.png')
         game.load.atlasJSONArray('dude', 'assets/knight.png', 'assets/knight.json');
     }
 
-    let player; let platforms; let cursors; let stars; let score = 0; let scoreText;
+    let map;
+    let tileset;
+    let layer;
+    let player; 
+    let platforms; 
+    let cursors; 
+    let stars; 
+    let score = 0; 
+    let scoreText;
+    let bg;
 
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        game.add.sprite(0, 0, 'sky');
+        bg = game.add.tileSprite(0, 0, 1400, 600, 'dungeon');
+        bg.fixedToCamera = true;
 
-        platforms = game.add.group();
+        map = game.add.tilemap('level1');
 
-        platforms.enableBody = true;
+        map.addTilesetImage('tiles');
 
-        let ground = platforms.create(0, game.world.height - 64, 'ground');
+        //map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
 
-        ground.scale.setTo(2, 2);
+        //game.add.sprite(0, 0, 'sky');
 
-        ground.body.immovable = true;
+        // platforms = game.add.group();
+        // platforms.enableBody = true;
 
-        let ledge = platforms.create(400, 400, 'ground');
-        ledge.body.immovable = true;
+        // let ground = platforms.create(0, game.world.height - 64, 'ground');
 
-        ledge = platforms.create(-150, 250, 'ground');
-        ledge.body.immovable = true;
+        // ground.scale.setTo(2, 2);
+        // ground.body.immovable = true;
+
+        // let ledge = platforms.create(400, 400, 'ground');
+        // ledge.body.immovable = true;
+
+        // ledge = platforms.create(-150, 250, 'ground');
+        // ledge.body.immovable = true;
 
         player = game.add.sprite(32, game.world.height -190, 'dude');
 
@@ -41,25 +60,21 @@ window.onload = function() {
 
         player.animations.add('left', [0, 1, 2, 3], 3, true);
         player.animations.add('right', [0, 1, 2, 3], 3, true);
-        player.animations.add('kik', [4, 5, 6, 7], 5, true);
+        player.animations.add('kick', [4, 5, 6, 7], 5, true);
 
         stars = game.add.group();
-
         stars.enableBody = true;
 
-        for (var i = 0; i < 12; i++)
+        for (var i = 0; i < 12; i++) 
         {
-            var star = stars.create(i * 70, 0, 'star');
-
+            let star = stars.create(i * 70, 0, 'star');
             star.body.gravity.y = 300;
-
             star.body.bounce.y = 0.7 + Math.random() * 0.2;
+            star.body.collideWorldBounds = true;
         }
 
-        scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-
+        scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#fff' });
         cursors = game.input.keyboard.createCursorKeys();
-
     }
 
     function update() {
@@ -100,7 +115,7 @@ window.onload = function() {
         }
         else if (cursors.down.isDown)
         {
-            player.animations.play('kik');
+            player.animations.play('kick');
         }
 
         //  Allow the player to jump if they are touching the ground.
