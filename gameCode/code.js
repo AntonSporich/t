@@ -1,11 +1,11 @@
 window.onload = function() {
 
 
-    var game = new Phaser.Game(1400, 600, Phaser.CANVAS, 'gameAround', { preload: preload, create: create, update: update });
+    var game = new Phaser.Game(1025, 480, Phaser.CANVAS, 'gameAround', { preload: preload, create: create, update: update });
 
     function preload() {
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('tiles', 'assets/levels/tiles.png');
+        game.load.image('tiles', 'assets/levels/tiles.png');;
         game.load.image('ground', 'assets/platform.png');
         game.load.image('star', 'assets/star.png');
         game.load.image('dungeon', 'assets/dungeon.png')
@@ -26,14 +26,19 @@ window.onload = function() {
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        bg = game.add.tileSprite(0, 0, 1400, 600, 'dungeon');
+        bg = game.add.tileSprite(0, 0, 1920, 480, 'dungeon');
         bg.fixedToCamera = true;
 
         map = game.add.tilemap('level1');
-
         map.addTilesetImage('tiles');
 
-        //map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
+             
+        layer = map.createLayer('Tile Layer 1');
+        game.add.existing(layer);
+
+        layer.resizeWorld();
+
+        map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);  
 
         //game.add.sprite(0, 0, 'sky');
 
@@ -53,7 +58,9 @@ window.onload = function() {
 
         player = game.add.sprite(32, game.world.height -190, 'dude');
 
+
         game.physics.arcade.enable(player);
+        game.camera.follow(player);
 
         player.body.gravity.y = 600;
         player.body.collideWorldBounds = true;
@@ -79,8 +86,8 @@ window.onload = function() {
 
     function update() {
 
-        game.physics.arcade.collide(player, platforms);
-        game.physics.arcade.collide(stars, platforms);
+        game.physics.arcade.collide(stars, layer);
+        game.physics.arcade.collide(player, layer);
 
         game.physics.arcade.overlap(player, stars, collectStar, null, this);
 
