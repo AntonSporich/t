@@ -21,6 +21,7 @@ window.onload = function() {
     let score = 0;
     let scoreText;
     let bg;
+    let jumpTimer = 0;
 
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -60,7 +61,7 @@ window.onload = function() {
         game.physics.arcade.enable(player);
         game.camera.follow(player);
 
-        player.body.gravity.y = 600;
+        player.body.gravity.y = 1100;
         player.body.collideWorldBounds = true;
 
         player.animations.add('left', [0, 1, 2, 3], 3, true);
@@ -83,6 +84,8 @@ window.onload = function() {
     }
 
     function update() {
+
+        console.log(game.time.now)
 
         game.physics.arcade.collide(stars, layer);
         game.physics.arcade.collide(player, layer);
@@ -123,10 +126,11 @@ window.onload = function() {
             player.animations.play('kick');
         }
 
-        //  Allow the player to jump if they are touching the ground.
-        else if (cursors.up.isDown && player.body.onFloor())
+        //  Allow the players to jump if they are touching the ground.
+        else if (cursors.up.isDown && player.body.onFloor() && game.time.now > jumpTimer)
         {
-            player.body.velocity.y = -650;
+            player.body.velocity.y = -500;
+            jumpTimer = game.time.now + 900;
         }
         else
         {
