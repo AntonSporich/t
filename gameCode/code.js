@@ -7,39 +7,64 @@ window.onload = function() {
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/levels/tiles.png');;
         game.load.image('star', 'assets/star.png');
-        game.load.image('dungeon', 'assets/dungeon.png')
+        game.load.image('dungeon', 'assets/dungeon.png');
+        game.load.image('blob', 'assets/ball.png');
         game.load.atlasJSONArray('dude', 'assets/knight.png', 'assets/knight.json');
     }
 
     let map;
     let tileset;
     let layer;
-    let player;
-    let platforms;
     let cursors;
-    let stars;
-    let score = 0;
     let scoreText;
-    let bg;
+    let background;
+    //let platforms;
+
+    let player;
+    let blobs;
+    let stars;
+
+    let score = 0;
     let jumpTimer = 0;
+
+    // Blob
+    let k = 120;
+    let waveSize = 8;
+    let wavePixelChunk = 2;
+    let bitMapData;
+    let waveDataCounter;
 
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        bg = game.add.tileSprite(0, 0, 1920, 480, 'dungeon');
-        bg.fixedToCamera = true;
+        background = game.add.tileSprite(0, 0, 1920, 480, 'dungeon');
+        background.fixedToCamera = true;
 
         map = game.add.tilemap('level1');
         map.addTilesetImage('tiles');
-
         layer = map.createLayer('Tile Layer 1');
         game.add.existing(layer);
-
         layer.resizeWorld();
-
         map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
 
-        //game.add.sprite(0, 0, 'sky');
+        bitMapData = game.add.bitmapData(32, 64);
+        waveData = game.math.sinCosGenerator(32, 8, 8, 2);
+
+        blobs = game.add.group();
+        blobs.enableBody = true;
+        game.physics.arcade.enable(blobs);
+        
+
+        // Will take coordintats of blobs from the tile map and add it in cycle, like stars
+
+        //let blob = game.add.sprite(130, game.world.height - 164, bitMapData)
+        blob = blobs.create(130, game.world.height - 260, bitMapData);
+        console.log(typeof blobs.children )
+        game.physics.arcade.enable(blob);
+        blob.body.gravity.y = 1100;
+        blob.body.collideWorldBounds = true;
+        blob.body.velocity.x = k;
+        //blob.body.velocity.y = game.world.randomY;
 
         // platforms = game.add.group();
         // platforms.enableBody = true;
@@ -55,7 +80,7 @@ window.onload = function() {
         // ledge = platforms.create(-150, 250, 'ground');
         // ledge.body.immovable = true;
 
-        player = game.add.sprite(32, game.world.height -190, 'dude');
+        player = game.add.sprite(32, game.world.height - 190, 'dude');
 
 
         game.physics.arcade.enable(player);
@@ -85,10 +110,12 @@ window.onload = function() {
 
     function update() {
 
-        console.log(game.time.now)
-
         game.physics.arcade.collide(stars, layer);
+        //game.physics.arcade.collide(blobs, layer);
+        game.physics.arcade.collide(blob, layer);
         game.physics.arcade.collide(player, layer);
+        //game.physics.arcade.collide(player, blobs);
+        game.physics.arcade.collide(player, blob);
 
         game.physics.arcade.overlap(player, stars, collectStar, null, this);
 
@@ -138,6 +165,19 @@ window.onload = function() {
             player.animations.stop();
             player.frame = 1;
         }
+
+
+        for(key in blobs.children) 
+        {
+            if (!blobs.children[key].body.velocity.x) 
+            {
+                k *= -1;
+                blobs.children[key].body.velocity.x = k;
+            } 
+        }
+
+        bitMapData.cls();
+        updateNastyBlob();
     }
 
     function collectStar (player, star) {
@@ -148,6 +188,33 @@ window.onload = function() {
         //  Add and update the score
         score += 10;
         scoreText.text = 'Score: ' + score;
+    }
 
+    function updateNastyBlob() {
+        let s = 0;
+        let copyRect = { x: 0, y: 0, w: wavePixelChunk, h: 35 };
+        let copyPoint = { x: 0, y: 0 };
+
+        for (let x = 0; x < 32; x += wavePixelChunk)
+        {
+            copyPoint.x = x;
+            copyPoint.y = waveSize + (waveSize / 2) + waveData.sin[s];
+
+            bitMapData.context.drawImage(game.cache.getImage('blob'), copyRect.x, copyRect.y, copyRect.w, copyRect.h, copyPoint.x, copyPoint.y, copyRect.w, copyRect.h);
+            
+            copyRect.x += wavePixelChunk;
+            
+            s++;
+    }
+
+    //  Cycle through the wave data - this is what causes the image to "undulate"
+    Phaser.ArrayUtils.rotate(waveData.sin);
+    
+    waveDataCounter++;
+    
+    if (waveDataCounter === waveData.length)
+    {
+        waveDataCounter = 0;
+    }
     }
 }
