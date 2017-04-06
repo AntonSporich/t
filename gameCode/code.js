@@ -6,10 +6,12 @@ window.onload = function() {
     function preload() {
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/levels/tiles.png');
-        game.load.image('star', 'assets/1z.png');
+        game.load.image('star', 'assets/star.png');
         game.load.image('blob', 'assets/ball.png');
         game.load.image('dungeon', 'assets/dungeon.png');
         game.load.atlasJSONArray('dude', 'assets/knight.png', 'assets/knight.json');
+        game.load.atlasJSONArray('zombie', 'assets/zombie.png', 'assets/zombie.json');
+
     }
 
     let map;
@@ -35,6 +37,10 @@ window.onload = function() {
     let wavePixelChunk = 2;
     let bitMapData;
     let waveDataCounter;
+
+    let zombies;
+    let zombie;
+    let zomVel = -120;
 
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -69,6 +75,9 @@ window.onload = function() {
         blobs = game.add.group();
         blobs.enableBody = true;
 
+        zombies = game.add.group();
+        zombies.enableBody = true;
+
         enetetiesPositioning();
 
         scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#fff' });
@@ -80,6 +89,7 @@ window.onload = function() {
 
         game.physics.arcade.collide(stars, layer);
         game.physics.arcade.collide(blobs, layer);
+        game.physics.arcade.collide(zombies, layer);
         game.physics.arcade.collide(player, layer);
 
         game.physics.arcade.overlap(stars, player, collectStar, null, this);
@@ -141,9 +151,18 @@ window.onload = function() {
                 blobs.children[key].body.velocity.x = blobX;
             }
         }
+        for(key in zombies.children)
+        {
+            if (!zombies.children[key].body.velocity.x)
+            {
+                zomVel *= -1;
+                zombies.children[key].body.velocity.x = zomVel;
+            }
+        }
 
         bitMapData.cls();
         updateNastyBlob();
+        UpdateZombie();
     }
 
     function collectStar (player, star) {
@@ -190,6 +209,18 @@ window.onload = function() {
         }
     }
 
+    function UpdateZombie () {
+        if(zombie.body.velocity.x < 0) {
+            zombie.animations.play('move');
+            zombie.scale.x = 1;
+        }
+        else {
+            zombie.scale.x = -1;
+            zombie.animations.play('move');
+        }
+
+    }
+
     function enetetiesPositioning() {
 
         let objArr = map["objects"]["Object Layer 1"];
@@ -209,6 +240,12 @@ window.onload = function() {
                 star.body.gravity.y = 300;
                 star.body.bounce.y = 0.7 + Math.random() * 0.2;
                 star.body.collideWorldBounds = true;
+            } else if (Entity["name"] === "zombie") {
+                zombie = zombies.create(Entity["x"], Entity["y"], "zombie")
+                zombie.body.collideWorldBounds = true;
+                zombie.body.gravity.y = 1100;
+                zombie.animations.add('move', [0, 1, 2, 3], 3, true);
+                zombie.body.velocity.x = zomVel;
             }
         }
     }
