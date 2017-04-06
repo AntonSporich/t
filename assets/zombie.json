@@ -1,0 +1,52 @@
+{"frames": [
+
+{
+	"filename": "1z.png",
+	"frame": {"x":0,"y":0,"w":40,"h":49},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":49},
+	"sourceSize": {"w":40,"h":49}
+},
+{
+	"filename": "2z.png",
+	"frame": {"x":40,"y":0,"w":40,"h":49},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":49},
+	"sourceSize": {"w":40,"h":49}
+},
+{
+	"filename": "3z.png",
+	"frame": {"x":80,"y":0,"w":40,"h":49},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":49},
+	"sourceSize": {"w":40,"h":49}
+},
+{
+	"filename": "4z.png",
+	"frame": {"x":120,"y":0,"w":40,"h":49},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":49},
+	"sourceSize": {"w":40,"h":49}
+},
+{
+	"filename": "5z.png",
+	"frame": {"x":160,"y":0,"w":40,"h":49},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":49},
+	"sourceSize": {"w":40,"h":49}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "zombie.png",
+	"format": "RGBA8888",
+	"size": {"w":200,"h":49},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:0db84b4eec00a512cfbbaf3fb8d09352:a9573725a9b65cd4ab16660438febbd4:671cfcca2facf02865d2d7530477df67$"
+}
+}

@@ -6,7 +6,7 @@ window.onload = function() {
     function preload() {
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/levels/tiles.png');
-        game.load.image('star', 'assets/star.png');
+        game.load.image('star', 'assets/1z.png');
         game.load.image('blob', 'assets/ball.png');
         game.load.image('dungeon', 'assets/dungeon.png');
         game.load.atlasJSONArray('dude', 'assets/knight.png', 'assets/knight.json');
@@ -133,13 +133,13 @@ window.onload = function() {
         }
 
         //Patroling for blobs
-        for(key in blobs.children) 
+        for(key in blobs.children)
         {
-            if (!blobs.children[key].body.velocity.x) 
+            if (!blobs.children[key].body.velocity.x)
             {
                 blobX *= -1;
                 blobs.children[key].body.velocity.x = blobX;
-            } 
+            }
         }
 
         bitMapData.cls();
@@ -155,8 +155,13 @@ window.onload = function() {
     }
 
     function blobKills(player, blob) {
-        player.kill();
-        player.reset(52, 52)
+        if (cursors.down.isDown) {
+            blob.kill();
+        }
+        else {
+            player.kill();
+            player.reset(52, 52)
+        }
     }
 
     function updateNastyBlob() {
@@ -170,9 +175,9 @@ window.onload = function() {
             copyPoint.y = waveSize + (waveSize / 2) + waveData.sin[s];
 
             bitMapData.context.drawImage(game.cache.getImage('blob'), copyRect.x, copyRect.y, copyRect.w, copyRect.h, copyPoint.x, copyPoint.y, copyRect.w, copyRect.h);
-            
+
             copyRect.x += wavePixelChunk;
-            
+
             s++;
     }
         // Cycle through the wave data - this is what causes the image to "undulate"
@@ -188,12 +193,12 @@ window.onload = function() {
     function enetetiesPositioning() {
 
         let objArr = map["objects"]["Object Layer 1"];
-        
-        for (let i = 0; i < objArr.length; i++) 
+
+        for (let i = 0; i < objArr.length; i++)
         {
             let Entity = objArr[i];
             if (Entity["name"] === "blob")
-            {   
+            {
                 let blob = blobs.create(Entity["x"], Entity["y"], bitMapData);
                 blob.body.gravity.y = 1100;
                 blob.body.collideWorldBounds = true;
