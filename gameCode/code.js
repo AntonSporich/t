@@ -13,11 +13,13 @@ window.onload = function() {
     }
 
     let map;
+    //let objArr;
     let tileset;
     let layer;
     let cursors;
     let scoreText;
     let background;
+
     //let platforms;
 
     let player;
@@ -64,29 +66,14 @@ window.onload = function() {
         stars = game.add.group();
         stars.enableBody = true;
 
-        for (var i = 0; i < 12; i++)
-        {
-            let star = stars.create(i * 70, 0, 'star');
-            star.body.gravity.y = 300;
-            star.body.bounce.y = 0.7 + Math.random() * 0.2;
-            star.body.collideWorldBounds = true;
-        }
-
-        scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#fff' });
-        cursors = game.input.keyboard.createCursorKeys();
-
-
         blobs = game.add.group();
         blobs.enableBody = true;
 
-        // Will take coordintats of blobs from the tile map and add it in cycle, like stars
+        enetetiesPositioning();
 
-        //let blob = game.add.sprite(130, game.world.height - 164, bitMapData)
-        blob = blobs.create(130, game.world.height - 260, bitMapData);
-        blob.body.gravity.y = 1100;
-        blob.body.collideWorldBounds = true;
-        blob.body.velocity.x = blobX;
-        //blob.body.velocity.y = game.world.randomY;
+        scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#fff' });
+        scoreText.fixedToCamera = true;
+        cursors = game.input.keyboard.createCursorKeys();
     }
 
     function update() {
@@ -145,7 +132,7 @@ window.onload = function() {
             player.frame = 1;
         }
 
-
+        //Patroling for blobs
         for(key in blobs.children) 
         {
             if (!blobs.children[key].body.velocity.x) 
@@ -188,15 +175,36 @@ window.onload = function() {
             
             s++;
     }
+        // Cycle through the wave data - this is what causes the image to "undulate"
+        Phaser.ArrayUtils.rotate(waveData.sin);
+        waveDataCounter++;
 
-    //  Cycle through the wave data - this is what causes the image to "undulate"
-    Phaser.ArrayUtils.rotate(waveData.sin);
-    
-    waveDataCounter++;
-    
-    if (waveDataCounter === waveData.length)
-    {
-        waveDataCounter = 0;
+        if (waveDataCounter === waveData.length)
+        {
+            waveDataCounter = 0;
+        }
     }
+
+    function enetetiesPositioning() {
+
+        let objArr = map["objects"]["Object Layer 1"];
+        
+        for (let i = 0; i < objArr.length; i++) 
+        {
+            let Entity = objArr[i];
+            if (Entity["name"] === "blob")
+            {   
+                let blob = blobs.create(Entity["x"], Entity["y"], bitMapData);
+                blob.body.gravity.y = 1100;
+                blob.body.collideWorldBounds = true;
+                blob.body.velocity.x = blobX;
+
+            } else if (Entity["name"] === "star") {
+                let star = stars.create(Entity["x"], Entity["y"], "star");
+                star.body.gravity.y = 300;
+                star.body.bounce.y = 0.7 + Math.random() * 0.2;
+                star.body.collideWorldBounds = true;
+            }
+        }
     }
 }
