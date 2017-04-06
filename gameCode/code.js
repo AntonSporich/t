@@ -5,10 +5,10 @@ window.onload = function() {
 
     function preload() {
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('tiles', 'assets/levels/tiles.png');;
+        game.load.image('tiles', 'assets/levels/tiles.png');
         game.load.image('star', 'assets/star.png');
-        game.load.image('dungeon', 'assets/dungeon.png');
         game.load.image('blob', 'assets/ball.png');
+        game.load.image('dungeon', 'assets/dungeon.png');
         game.load.atlasJSONArray('dude', 'assets/knight.png', 'assets/knight.json');
     }
 
@@ -28,7 +28,7 @@ window.onload = function() {
     let jumpTimer = 0;
 
     // Blob
-    let k = 120;
+    let blobX = 120;
     let waveSize = 8;
     let wavePixelChunk = 2;
     let bitMapData;
@@ -50,39 +50,7 @@ window.onload = function() {
         bitMapData = game.add.bitmapData(32, 64);
         waveData = game.math.sinCosGenerator(32, 8, 8, 2);
 
-        blobs = game.add.group();
-        blobs.enableBody = true;
-        game.physics.arcade.enable(blobs);
-        
-
-        // Will take coordintats of blobs from the tile map and add it in cycle, like stars
-
-        //let blob = game.add.sprite(130, game.world.height - 164, bitMapData)
-        blob = blobs.create(130, game.world.height - 260, bitMapData);
-        console.log(typeof blobs.children )
-        game.physics.arcade.enable(blob);
-        blob.body.gravity.y = 1100;
-        blob.body.collideWorldBounds = true;
-        blob.body.velocity.x = k;
-        //blob.body.velocity.y = game.world.randomY;
-
-        // platforms = game.add.group();
-        // platforms.enableBody = true;
-
-        // let ground = platforms.create(0, game.world.height - 64, 'ground');
-
-        // ground.scale.setTo(2, 2);
-        // ground.body.immovable = true;
-
-        // let ledge = platforms.create(400, 400, 'ground');
-        // ledge.body.immovable = true;
-
-        // ledge = platforms.create(-150, 250, 'ground');
-        // ledge.body.immovable = true;
-
         player = game.add.sprite(32, game.world.height - 190, 'dude');
-
-
         game.physics.arcade.enable(player);
         game.camera.follow(player);
 
@@ -106,18 +74,29 @@ window.onload = function() {
 
         scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#fff' });
         cursors = game.input.keyboard.createCursorKeys();
+
+
+        blobs = game.add.group();
+        blobs.enableBody = true;
+
+        // Will take coordintats of blobs from the tile map and add it in cycle, like stars
+
+        //let blob = game.add.sprite(130, game.world.height - 164, bitMapData)
+        blob = blobs.create(130, game.world.height - 260, bitMapData);
+        blob.body.gravity.y = 1100;
+        blob.body.collideWorldBounds = true;
+        blob.body.velocity.x = blobX;
+        //blob.body.velocity.y = game.world.randomY;
     }
 
     function update() {
 
         game.physics.arcade.collide(stars, layer);
-        //game.physics.arcade.collide(blobs, layer);
-        game.physics.arcade.collide(blob, layer);
+        game.physics.arcade.collide(blobs, layer);
         game.physics.arcade.collide(player, layer);
-        //game.physics.arcade.collide(player, blobs);
-        game.physics.arcade.collide(player, blob);
 
-        game.physics.arcade.overlap(player, stars, collectStar, null, this);
+        game.physics.arcade.overlap(stars, player, collectStar, null, this);
+        game.physics.arcade.overlap(blobs, player, blobKills, null, this);
 
         player.body.velocity.x = 0;
 
@@ -171,8 +150,8 @@ window.onload = function() {
         {
             if (!blobs.children[key].body.velocity.x) 
             {
-                k *= -1;
-                blobs.children[key].body.velocity.x = k;
+                blobX *= -1;
+                blobs.children[key].body.velocity.x = blobX;
             } 
         }
 
@@ -181,13 +160,16 @@ window.onload = function() {
     }
 
     function collectStar (player, star) {
-
         // Removes the star from the screen
         star.kill();
-
         //  Add and update the score
         score += 10;
         scoreText.text = 'Score: ' + score;
+    }
+
+    function blobKills(player, blob) {
+        player.kill();
+        player.reset(52, 52)
     }
 
     function updateNastyBlob() {
