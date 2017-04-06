@@ -149,15 +149,15 @@
                  "y":32
                 }, 
                 {
-                 "height":0,
-                 "id":20,
-                 "name":"",
+                 "height":31,
+                 "id":21,
+                 "name":"zombie",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":1217,
-                 "y":203
+                 "width":32,
+                 "x":686,
+                 "y":414
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -166,7 +166,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":21,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":16,
