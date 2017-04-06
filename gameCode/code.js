@@ -30,7 +30,8 @@ window.onload = function() {
     let jumpTimer = 0;
 
     // Blob
-    let blobX = 120;
+    let blob;
+    let blobX = 0;
     let waveSize = 8;
     let wavePixelChunk = 2;
     let bitMapData;
@@ -77,6 +78,7 @@ window.onload = function() {
     }
 
     function update() {
+
 
         game.physics.arcade.collide(stars, layer);
         game.physics.arcade.collide(blobs, layer);
@@ -132,7 +134,26 @@ window.onload = function() {
             player.frame = 1;
         }
 
-        //Patroling for blobs
+
+        // Enemy begins to follow the player if he's too close
+
+        // let diff = player.body.x - blob.body.x;
+        // if (player.body.y -blob.body.y < -135)
+        // {
+        //     blob.body.velocity.x = 0;
+        // } else if (diff >= 150 || diff <= -150) 
+        // {
+        //     blob.body.velocity.x = 0;
+        // } else if (diff < 0)
+        // {
+        //      blob.body.velocity.x = -120;
+        // } else if (diff > 0)
+        // {
+        //    blob.body.velocity.x = 120; 
+        // }
+
+
+        // Patroling for blobs
         for(key in blobs.children)
         {
             if (!blobs.children[key].body.velocity.x)
@@ -144,6 +165,10 @@ window.onload = function() {
 
         bitMapData.cls();
         updateNastyBlob();
+
+        console.log('p', player.body.y)
+        console.log('b', blob.body.y)
+
     }
 
     function collectStar (player, star) {
@@ -199,7 +224,7 @@ window.onload = function() {
             let Entity = objArr[i];
             if (Entity["name"] === "blob")
             {
-                let blob = blobs.create(Entity["x"], Entity["y"], bitMapData);
+                blob = blobs.create(Entity["x"], Entity["y"], bitMapData);
                 blob.body.gravity.y = 1100;
                 blob.body.collideWorldBounds = true;
                 blob.body.velocity.x = blobX;
