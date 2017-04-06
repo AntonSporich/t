@@ -31,7 +31,7 @@ window.onload = function() {
 
     // Blob
     let blob;
-    let blobX = 0;
+    let blobX = 120;
     let waveSize = 8;
     let wavePixelChunk = 2;
     let bitMapData;
@@ -165,10 +165,6 @@ window.onload = function() {
 
         bitMapData.cls();
         updateNastyBlob();
-
-        console.log('p', player.body.y)
-        console.log('b', blob.body.y)
-
     }
 
     function collectStar (player, star) {
