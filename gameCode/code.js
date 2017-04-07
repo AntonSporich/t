@@ -39,9 +39,11 @@ window.onload = function() {
     let bitMapData;
     let waveDataCounter;
 
+    //zombie
     let zombies;
     let zombie;
-    let zomVel = -120;
+    let zombieX = -30;
+    let zX;
 
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -96,6 +98,7 @@ window.onload = function() {
 
         game.physics.arcade.overlap(stars, player, collectStar, null, this);
         game.physics.arcade.overlap(blobs, player, blobKills, null, this);
+        game.physics.arcade.overlap(zombies, player, zombieKills, null, this);
 
         player.body.velocity.x = 0;
 
@@ -151,7 +154,7 @@ window.onload = function() {
         // if (player.body.y -blob.body.y < -135)
         // {
         //     blob.body.velocity.x = 0;
-        // } else if (diff >= 150 || diff <= -150) 
+        // } else if (diff >= 150 || diff <= -150)
         // {
         //     blob.body.velocity.x = 0;
         // } else if (diff < 0)
@@ -159,27 +162,9 @@ window.onload = function() {
         //      blob.body.velocity.x = -120;
         // } else if (diff > 0)
         // {
-        //    blob.body.velocity.x = 120; 
+        //    blob.body.velocity.x = 120;
         // }
 
-
-        // Patroling for blobs
-        for(key in blobs.children)
-        {
-            if (!blobs.children[key].body.velocity.x)
-            {
-                blobX *= -1;
-                blobs.children[key].body.velocity.x = blobX;
-            }
-        }
-        for(key in zombies.children)
-        {
-            if (!zombies.children[key].body.velocity.x)
-            {
-                zomVel *= -1;
-                zombies.children[key].body.velocity.x = zomVel;
-            }
-        }
 
         bitMapData.cls();
         updateNastyBlob();
@@ -204,13 +189,29 @@ window.onload = function() {
         }
     }
 
+    function zombieKills(player, blob) {
+        if (cursors.down.isDown) {
+            zombie.kill();
+        }
+        else {
+            player.kill();
+            player.reset(52, 52)
+        }
+    }
+
     function updateNastyBlob() {
         let s = 0;
         let copyRect = { x: 0, y: 0, w: wavePixelChunk, h: 35 };
         let copyPoint = { x: 0, y: 0 };
+        // Patroling for blobs
+        for(key in blobs.children) {
+            if (!blobs.children[key].body.velocity.x) {
+                blobX *= -1;
+                blobs.children[key].body.velocity.x = blobX;
+            }
+        }
 
-        for (let x = 0; x < 32; x += wavePixelChunk)
-        {
+        for (let x = 0; x < 32; x += wavePixelChunk) {
             copyPoint.x = x;
             copyPoint.y = waveSize + (waveSize / 2) + waveData.sin[s];
 
@@ -231,6 +232,11 @@ window.onload = function() {
     }
 
     function UpdateZombie () {
+        if (!zombie.body.velocity.x || zX - 300 === zombie.body.x ) {
+            zombieX *= -1;
+            zombie.body.velocity.x = zombieX;
+            
+        }
         if(zombie.body.velocity.x < 0) {
             zombie.animations.play('move');
             zombie.scale.x = 1;
@@ -239,6 +245,7 @@ window.onload = function() {
             zombie.scale.x = -1;
             zombie.animations.play('move');
         }
+
 
     }
 
@@ -266,7 +273,8 @@ window.onload = function() {
                 zombie.body.collideWorldBounds = true;
                 zombie.body.gravity.y = 1100;
                 zombie.animations.add('move', [0, 1, 2, 3], 3, true);
-                zombie.body.velocity.x = zomVel;
+                zombie.body.velocity.x = zombieX;
+                zX = zombie.body.x
             }
         }
     }
