@@ -235,7 +235,7 @@ window.onload = function() {
         if (!zombie.body.velocity.x || zX - 300 === zombie.body.x ) {
             zombieX *= -1;
             zombie.body.velocity.x = zombieX;
-            
+
         }
         if(zombie.body.velocity.x < 0) {
             zombie.animations.play('move');
@@ -272,7 +272,7 @@ window.onload = function() {
                 zombie = zombies.create(Entity["x"], Entity["y"], "zombie")
                 zombie.body.collideWorldBounds = true;
                 zombie.body.gravity.y = 1100;
-                zombie.animations.add('move', [0, 1, 2, 3], 3, true);
+                zombie.animations.add('move', [0, 1, 2, 3, 4, 3, 2], 3, true);
                 zombie.body.velocity.x = zombieX;
                 zX = zombie.body.x
             }
