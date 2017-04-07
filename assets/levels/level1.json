@@ -279,6 +279,28 @@
                  "width":33,
                  "x":246,
                  "y":337
+                }, 
+                {
+                 "height":0,
+                 "id":49,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1278,
+                 "y":395
+                }, 
+                {
+                 "height":0,
+                 "id":50,
+                 "name":"player",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":52,
+                 "y":52
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -287,7 +309,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":47,
+ "nextobjectid":53,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":16,

@@ -1,10 +1,12 @@
 window.onload = function() {
 
 
-    var game = new Phaser.Game(1025, 480, Phaser.CANVAS, 'gameAround', { preload: preload, create: create, update: update });
+    var game = new Phaser.Game(1025, 480, Phaser.CANVAS, 'gameAround', { preload: preload, create: create, update: update});
 
     function preload() {
+
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('game-over', 'assets/game-over.png');
         game.load.image('tiles', 'assets/levels/tiles.png');
         game.load.image('star', 'assets/star.png');
         game.load.image('blob', 'assets/ball.png');
@@ -29,7 +31,9 @@ window.onload = function() {
     let hearts;
 
     let heartScale;
-    let firstScaleHeartX;
+    let firstScaleHeartX = 150;
+
+
 
     let score = 0;
     let jumpTimer = 0;
@@ -48,6 +52,8 @@ window.onload = function() {
     let zombieX = -30;
     let zX; let zC;
 
+    let youLose;
+
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -63,17 +69,6 @@ window.onload = function() {
 
         bitMapData = game.add.bitmapData(32, 64);
         waveData = game.math.sinCosGenerator(32, 8, 8, 2);
-
-        player = game.add.sprite(52, 52, 'dude');
-        game.physics.arcade.enable(player);
-        game.camera.follow(player);
-
-        player.body.gravity.y = 1100;
-        player.body.collideWorldBounds = true;
-
-        player.animations.add('left', [0, 1, 2, 3], 3, true);
-        player.animations.add('right', [0, 1, 2, 3], 3, true);
-        player.animations.add('kick', [4, 5, 6, 7], 5, true);
 
         stars = game.add.group();
         stars.enableBody = true;
@@ -95,10 +90,8 @@ window.onload = function() {
         heartScale = game.add.group();
         heartScale.fixedToCamera = true;
         firstScaleHeartX = 150;
-        for (let i = 0; i < 3; i++) {
-            let sHeart = heartScale.create(firstScaleHeartX, 18, 'heart');
-            firstScaleHeartX += 20;
-        }
+
+        threeLives();
 
         cursors = game.input.keyboard.createCursorKeys();
     }
@@ -117,8 +110,8 @@ window.onload = function() {
         game.physics.arcade.overlap(blobs, player, blobKills, null, this);
         game.physics.arcade.overlap(zombies, player, zombieKills, null, this);
 
+        
         player.body.velocity.x = 0;
-
         // Movements of Player
         if (cursors.left.isDown && player.body.onFloor())
         {
@@ -184,7 +177,17 @@ window.onload = function() {
 
         if (heartScale["children"].length === 0)
         {
-            gameOver()
+            console.log("game over");
+            player.kill();
+            youLose = game.add.sprite(0, 70, 'game-over');
+
+            document.body.onkeyup = function(e) {
+                if (e.keyCode === 32)
+                {
+                    location.reload();
+                }
+            }
+
         }
 
         bitMapData.cls();
@@ -197,7 +200,8 @@ window.onload = function() {
         //  Add and update the score
         score += 1;
         scoreText.text = 'Hearts: ' + score + '/666';
-    }
+
+       }
 
     function collectHealth (player, heart) {
         heart.kill();
@@ -285,7 +289,21 @@ window.onload = function() {
         for (let i = 0; i < objArr.length; i++)
         {
             let Entity = objArr[i];
-            if (Entity["name"] === "blob")
+            if (Entity["name"] === "player")
+            {
+                player = game.add.sprite(52, 52, 'dude');
+                game.physics.arcade.enable(player);
+                game.camera.follow(player);
+
+                player.body.gravity.y = 1100;
+                player.body.collideWorldBounds = true;
+
+                player.animations.add('left', [0, 1, 2, 3], 3, true);
+                player.animations.add('right', [0, 1, 2, 3], 3, true);
+                player.animations.add('kick', [4, 5, 6, 7], 5, true);
+
+            }
+            else if (Entity["name"] === "blob")
             {
                 blob = blobs.create(Entity["x"], Entity["y"], bitMapData);
                 blob.body.collideWorldBounds = true;
@@ -319,5 +337,28 @@ window.onload = function() {
 
             }
         }
+    }
+
+    function threeLives() {
+        for (let i = 0; i < 3; i++) {
+            let sHeart = heartScale.create(firstScaleHeartX, 18, 'heart');
+            firstScaleHeartX += 20;
+        }
+    }
+
+    function restart () {
+
+    hearts["children"].length = 0;
+    stars["children"].length = 0;
+    blobs["children"].length = 0;
+    zombies["children"].length = 0;
+
+    // enetetiesPositioning()
+    // threeLives();
+    create();
+    scoreText.text = 'Hearts: 0/666';
+    player = game.add.sprite(52, 52, 'dude');
+    youLose.visible = false;
+
     }
 }
