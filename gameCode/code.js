@@ -215,6 +215,7 @@ window.onload = function() {
         else {
             player.kill();
             heartScale["children"].pop();
+            firstScaleHeartX -= 20;
             player.reset(52, 52)
         }
     }
@@ -346,19 +347,4 @@ window.onload = function() {
         }
     }
 
-    function restart () {
-
-    hearts["children"].length = 0;
-    stars["children"].length = 0;
-    blobs["children"].length = 0;
-    zombies["children"].length = 0;
-
-    // enetetiesPositioning()
-    // threeLives();
-    create();
-    scoreText.text = 'Hearts: 0/666';
-    player = game.add.sprite(52, 52, 'dude');
-    youLose.visible = false;
-
-    }
 }
