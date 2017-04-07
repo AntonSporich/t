@@ -50,7 +50,6 @@ window.onload = function() {
     let zombies;
     let zombie;
     let zombieX = -30;
-    let zX; let zC;
 
     let youLose;
 
@@ -110,29 +109,29 @@ window.onload = function() {
         game.physics.arcade.overlap(blobs, player, blobKills, null, this);
         game.physics.arcade.overlap(zombies, player, zombieKills, null, this);
 
-        
+
         player.body.velocity.x = 0;
         // Movements of Player
-        if (cursors.left.isDown && player.body.onFloor())
+        if (cursors.left.isDown && player.body.onFloor() && !cursors.down.isDown)
         {
             player.body.velocity.x = -150;
             player.animations.play('left');
             player.scale.x = -1;
         }
-        else if (cursors.left.isDown && !player.body.onFloor())
+        else if (cursors.left.isDown && !player.body.onFloor() && !cursors.down.isDown)
         {
             player.body.velocity.x = -150;
             player.animations.stop();
             player.frame = 2;
             player.scale.x = -1;
         }
-        else if (cursors.right.isDown && player.body.onFloor())
+        else if (cursors.right.isDown && player.body.onFloor() && !cursors.down.isDown)
         {
             player.body.velocity.x = 150;
             player.animations.play('right');
             player.scale.x = 1;
         }
-        else if (cursors.right.isDown && !player.body.onFloor())
+        else if (cursors.right.isDown && !player.body.onFloor() && !cursors.down.isDown)
         {
             player.body.velocity.x = 150;
             player.animations.stop();
@@ -156,8 +155,6 @@ window.onload = function() {
             player.animations.stop();
             player.frame = 1;
         }
-
-
         // Enemy begins to follow the player if he's too close
 
         // let diff = player.body.x - blob.body.x;
@@ -224,10 +221,11 @@ window.onload = function() {
         {
             zombie.kill();
         }
-        else
+        else if (Math.abs(zombie.body.x - player.body.x) < 20)
         {
             player.kill();
-            player.reset(52, 52)
+            heartScale["children"].pop();
+            player.reset(52, 52);
         }
     }
 
@@ -265,21 +263,26 @@ window.onload = function() {
 
     function UpdateZombie () {
         for(key in zombies.children) {
-            zX = zombies.children[key].body.x - 200;
-            zC = zombies.children[key].body.x + 1;
-            if (!zombies.children[key].body.velocity.x || zX === zombies.children[key].body.x || zC === zombies.children[key].body.x ) {
-                zombieX *= -1;
-                zombies.children[key].body.velocity.x = zombieX;
+            if(Math.abs(zombies.children[key].body.x - player.body.x) < 100 && Math.abs(zombies.children[key].body.y - player.body.y) < 60){
+                if(zombies.children[key].body.x > player.body.x) {
+                    zombies.children[key].body.velocity.x = - 90;
+                }
+                else if (zombies.children[key].body.x < player.body.x) {
+                    zombies.children[key].body.velocity.x =  90;
+                }
             }
+                if (!zombies.children[key].body.velocity.x) {
+                    zombieX *= -1;
+                    zombies.children[key].body.velocity.x = zombieX;
+                }
 
-            if(zombies.children[key].body.velocity.x < 0) {
-                zombies.children[key].animations.play('moveLeft');
-            }
-            else {
-                zombies.children[key].animations.play('moveRight');
-            }
+                if(zombies.children[key].body.velocity.x < 0) {
+                    zombies.children[key].animations.play('moveLeft');
+                }
+                else if (zombies.children[key].body.velocity.x > 0) {
+                    zombies.children[key].animations.play('moveRight');
+                }
         }
-
     }
 
     function enetetiesPositioning() {
@@ -327,10 +330,9 @@ window.onload = function() {
                 zombie.animations.add('moveRight', [5, 6, 7, 8, 9, 8, 7], 3, true);
                 zombie.body.velocity.x = zombieX;
 
-
             } else if (Entity["name"] === "heart")
             {
-                let heart = hearts.create(Entity["x"+1], Entity["y"], "heart");
+                let heart = hearts.create(Entity["x"], Entity["y"], "heart");
                 heart.body.collideWorldBounds = true;
                 heart.body.gravity.y = 300;
                 heart.body.bounce.y = 0.7 + Math.random() * 0.2;
