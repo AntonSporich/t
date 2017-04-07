@@ -11,7 +11,7 @@ window.onload = function() {
         game.load.image('dungeon', 'assets/dungeon.png');
         game.load.image('heart', 'assets/health.png')
         game.load.atlasJSONArray('dude', 'assets/knight.png', 'assets/knight.json');
-        game.load.atlasJSONArray('zombie', 'assets/zombie.png', 'assets/zombie.json');
+        game.load.atlasJSONArray('zombie', 'assets/zombie1.png', 'assets/zombie1.json');
 
     }
 
@@ -46,7 +46,7 @@ window.onload = function() {
     let zombies;
     let zombie;
     let zombieX = -30;
-    let zX;
+    let zX; let zC;
 
     function create() {
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -91,7 +91,7 @@ window.onload = function() {
 
         scoreText = game.add.text(16, 16, 'Hearts: 0/666', { fontSize: '18px', fill: '#fff' });
         scoreText.fixedToCamera = true;
-        
+
         heartScale = game.add.group();
         heartScale.fixedToCamera = true;
         firstScaleHeartX = 150;
@@ -182,7 +182,7 @@ window.onload = function() {
         //    blob.body.velocity.x = 120;
         // }
 
-        if (heartScale["children"].length === 0) 
+        if (heartScale["children"].length === 0)
         {
             gameOver()
         }
@@ -215,12 +215,12 @@ window.onload = function() {
         }
     }
 
-    function zombieKills(player, blob) {
-        if (cursors.down.isDown) 
+    function zombieKills(player, zombie) {
+        if (cursors.down.isDown)
         {
             zombie.kill();
         }
-        else 
+        else
         {
             player.kill();
             player.reset(52, 52)
@@ -260,21 +260,20 @@ window.onload = function() {
     }
 
     function UpdateZombie () {
-        if (!zombie.body.velocity.x || zX - 300 === zombie.body.x )
-        {
-            zombieX *= -1;
-            zombie.body.velocity.x = zombieX;
+        for(key in zombies.children) {
+            zX = zombies.children[key].body.x - 200;
+            zC = zombies.children[key].body.x + 1;
+            if (!zombies.children[key].body.velocity.x || zX === zombies.children[key].body.x || zC === zombies.children[key].body.x ) {
+                zombieX *= -1;
+                zombies.children[key].body.velocity.x = zombieX;
+            }
 
-        }
-        if(zombie.body.velocity.x < 0) 
-        {
-            zombie.animations.play('move');
-            zombie.scale.x = 1;
-        }
-        else 
-        {
-            zombie.scale.x = -1;
-            zombie.animations.play('move');
+            if(zombies.children[key].body.velocity.x < 0) {
+                zombies.children[key].animations.play('moveLeft');
+            }
+            else {
+                zombies.children[key].animations.play('moveRight');
+            }
         }
 
     }
@@ -291,28 +290,29 @@ window.onload = function() {
                 blob = blobs.create(Entity["x"], Entity["y"], bitMapData);
                 blob.body.collideWorldBounds = true;
                 blob.body.gravity.y = 1100;
-                
+
                 blob.body.velocity.x = blobX;
 
-            } else if (Entity["name"] === "star") 
+            } else if (Entity["name"] === "star")
             {
                 let star = stars.create(Entity["x"], Entity["y"], "star");
                 star.body.collideWorldBounds = true;
                 star.body.gravity.y = 300;
                 star.body.bounce.y = 0.7 + Math.random() * 0.2;
 
-            } else if (Entity["name"] === "zombie") 
+            } else if (Entity["name"] === "zombie")
             {
                 zombie = zombies.create(Entity["x"], Entity["y"], "zombie")
                 zombie.body.collideWorldBounds = true;
                 zombie.body.gravity.y = 1100;
-                zombie.animations.add('move', [0, 1, 2, 3, 4, 3, 2], 3, true);
+                zombie.animations.add('moveLeft', [0, 1, 2, 3, 4, 3, 2], 3, true);
+                zombie.animations.add('moveRight', [5, 6, 7, 8, 9, 8, 7], 3, true);
                 zombie.body.velocity.x = zombieX;
-                zX = zombie.body.x
+
 
             } else if (Entity["name"] === "heart")
             {
-                let heart = hearts.create(Entity["x"], Entity["y"], "heart");
+                let heart = hearts.create(Entity["x"+1], Entity["y"], "heart");
                 heart.body.collideWorldBounds = true;
                 heart.body.gravity.y = 300;
                 heart.body.bounce.y = 0.7 + Math.random() * 0.2;

@@ -1,0 +1,92 @@
+{"frames": [
+
+{
+	"filename": "1zY.png",
+	"frame": {"x":0,"y":0,"w":52,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":63},
+	"sourceSize": {"w":52,"h":63}
+},
+{
+	"filename": "2zY.png",
+	"frame": {"x":52,"y":0,"w":52,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":63},
+	"sourceSize": {"w":52,"h":63}
+},
+{
+	"filename": "3zY.png",
+	"frame": {"x":104,"y":0,"w":52,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":63},
+	"sourceSize": {"w":52,"h":63}
+},
+{
+	"filename": "4zY.png",
+	"frame": {"x":156,"y":0,"w":52,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":63},
+	"sourceSize": {"w":52,"h":63}
+},
+{
+	"filename": "5zY.png",
+	"frame": {"x":208,"y":0,"w":52,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":63},
+	"sourceSize": {"w":52,"h":63}
+},
+{
+	"filename": "6zY.png",
+	"frame": {"x":260,"y":0,"w":52,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":63},
+	"sourceSize": {"w":52,"h":63}
+},
+{
+	"filename": "7zY.png",
+	"frame": {"x":312,"y":0,"w":52,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":63},
+	"sourceSize": {"w":52,"h":63}
+},
+{
+	"filename": "8zY.png",
+	"frame": {"x":364,"y":0,"w":52,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":63},
+	"sourceSize": {"w":52,"h":63}
+},
+{
+	"filename": "9zY.png",
+	"frame": {"x":416,"y":0,"w":52,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":63},
+	"sourceSize": {"w":52,"h":63}
+},
+{
+	"filename": "10zY.png",
+	"frame": {"x":468,"y":0,"w":52,"h":63},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":63},
+	"sourceSize": {"w":52,"h":63}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "zombie1.png",
+	"format": "RGBA8888",
+	"size": {"w":520,"h":63},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:aab8935a3727521afc96abbcb6cf1a09:02419d3b66f2bd1dec160bb24c842152:e6cd16ab5a2401a9debf2f20b8f18774$"
+}
+}
