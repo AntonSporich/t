@@ -13,7 +13,7 @@ window.onload = function() {
         game.load.image('dungeon', 'assets/dungeon.png');
         game.load.image('heart', 'assets/health.png');
         game.load.image('stopper', 'assets/stopper.png')
-        game.load.atlasJSONArray('dude', 'assets/knight.png', 'assets/knight.json');
+        game.load.atlasJSONArray('dude', 'assets/knight1.png', 'assets/knight1.json');
         game.load.atlasJSONArray('zombie', 'assets/zombie1.png', 'assets/zombie1.json');
 
     }
@@ -27,6 +27,7 @@ window.onload = function() {
     let background;
 
     let player;
+    let playerX;
     let blobs;
     let stars;
     let hearts;
@@ -126,31 +127,40 @@ window.onload = function() {
         {
             player.body.velocity.x = -150;
             player.animations.play('left');
-            player.scale.x = -1;
+            playerX = 0;
+
         }
         else if (cursors.left.isDown && !player.body.onFloor() && !cursors.down.isDown)
         {
             player.body.velocity.x = -150;
             player.animations.stop();
-            player.frame = 2;
-            player.scale.x = -1;
+            player.frame = 6;
+            playerX = 0;
+
         }
         else if (cursors.right.isDown && player.body.onFloor() && !cursors.down.isDown)
         {
             player.body.velocity.x = 150;
             player.animations.play('right');
-            player.scale.x = 1;
+            playerX = 1;
+
         }
         else if (cursors.right.isDown && !player.body.onFloor() && !cursors.down.isDown)
         {
             player.body.velocity.x = 150;
             player.animations.stop();
             player.frame = 2;
-            player.scale.x = 1;
+            playerX = 1;
+
         }
-        else if (cursors.down.isDown)
+        else if (cursors.down.isDown && cursors.down.downDuration(800))
         {
-            player.animations.play('kick');
+            if(playerX === 0) {
+                player.animations.play('leftKick');
+            }
+            else if(playerX === 1) {
+                player.animations.play('rightKick');
+            }
         }
 
         //  Allow the players to jump if they are touching the ground.
@@ -163,7 +173,12 @@ window.onload = function() {
         {
             //  Stand idle
             player.animations.stop();
-            player.frame = 1;
+            if(playerX === 0) {
+                player.frame = 5;
+            }
+            else if(playerX === 1) {
+                player.frame = 1;
+            }
         }
         // Enemy begins to follow the player if he's too close
 
@@ -194,7 +209,6 @@ window.onload = function() {
                     location.reload();
                 }
             }
-
         }
 
         bitMapData.cls();
@@ -216,7 +230,12 @@ window.onload = function() {
     }
 
     function blobKills(player, blob) {
-        if (cursors.down.isDown) {
+        if (cursors.down.isDown && playerX === 0 && player.body.x > blob.body.x
+            && !cursors.down.downDuration(200) && cursors.down.downDuration(800)) {
+            blob.kill();
+        }
+        else if(cursors.down.isDown && playerX === 1 && player.body.x < blob.body.x
+            && !cursors.down.downDuration(200) && cursors.down.downDuration(800)) {
             blob.kill();
         }
         else {
@@ -228,14 +247,19 @@ window.onload = function() {
     }
 
     function zombieKills(player, zombie) {
-        if (cursors.down.isDown)
-        {
+        if(cursors.down.isDown && playerX === 0 && player.body.x > zombie.body.x
+            && !cursors.down.downDuration(200) && cursors.down.downDuration(800)) {
+            zombie.kill();
+        }
+        else if(cursors.down.isDown && playerX === 1 && player.body.x < zombie.body.x
+            && !cursors.down.downDuration(200) && cursors.down.downDuration(800)) {
             zombie.kill();
         }
         else if (Math.abs(zombie.body.x - player.body.x) < 20)
         {
             player.kill();
             heartScale["children"].pop();
+            firstScaleHeartX -= 20;
             player.reset(52, 52);
         }
     }
@@ -244,7 +268,7 @@ window.onload = function() {
         let s = 0;
         let copyRect = { x: 0, y: 0, w: wavePixelChunk, h: 35 };
         let copyPoint = { x: 0, y: 0 };
-        
+
         // Patroling for blobs
         for(key in blobs.children) {
             //console.log(blobs.children[key].body.velocity.x)
@@ -315,9 +339,10 @@ window.onload = function() {
                 player.body.gravity.y = 1100;
                 player.body.collideWorldBounds = true;
 
-                player.animations.add('left', [0, 1, 2, 3], 3, true);
+                player.animations.add('left', [4, 5, 6, 7], 3, true);
                 player.animations.add('right', [0, 1, 2, 3], 3, true);
-                player.animations.add('kick', [4, 5, 6, 7], 5, true);
+                player.animations.add('rightKick', [8, 9, 10, 11], 5, true);
+                player.animations.add('leftKick', [12, 13, 14, 15], 5, true);
 
             }
             else if (Entity["name"] === "blob")
@@ -351,7 +376,7 @@ window.onload = function() {
                 heart.body.gravity.y = 300;
                 heart.body.bounce.y = 0.7 + Math.random() * 0.2;
 
-            } else if (Entity["name"] === "stopper") 
+            } else if (Entity["name"] === "stopper")
             {
                  let stopper = stoppers.create(Entity["x"], Entity["y"]);
                  console.log(stopper)
