@@ -295,7 +295,7 @@ window.onload = function() {
             let Entity = objArr[i];
             if (Entity["name"] === "player")
             {
-                player = game.add.sprite(52, 52, 'dude');
+                player = game.add.sprite(Entity["x"], Entity["y"], 'dude');
                 game.physics.arcade.enable(player);
                 game.camera.follow(player);
 
