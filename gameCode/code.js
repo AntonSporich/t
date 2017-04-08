@@ -11,7 +11,8 @@ window.onload = function() {
         game.load.image('star', 'assets/star.png');
         game.load.image('blob', 'assets/ball.png');
         game.load.image('dungeon', 'assets/dungeon.png');
-        game.load.image('heart', 'assets/health.png')
+        game.load.image('heart', 'assets/health.png');
+        game.load.image('stopper', 'assets/stopper.png')
         game.load.atlasJSONArray('dude', 'assets/knight.png', 'assets/knight.json');
         game.load.atlasJSONArray('zombie', 'assets/zombie1.png', 'assets/zombie1.json');
 
@@ -29,6 +30,7 @@ window.onload = function() {
     let blobs;
     let stars;
     let hearts;
+    let stoppers;
 
     let heartScale;
     let firstScaleHeartX = 150;
@@ -81,6 +83,9 @@ window.onload = function() {
         zombies = game.add.group();
         zombies.enableBody = true;
 
+        stoppers = game.add.group();
+        stoppers.enableBody = true;
+
         enetetiesPositioning();
 
         scoreText = game.add.text(16, 16, 'Hearts: 0/666', { fontSize: '18px', fill: '#fff' });
@@ -103,6 +108,11 @@ window.onload = function() {
         game.physics.arcade.collide(blobs, layer);
         game.physics.arcade.collide(zombies, layer);
         game.physics.arcade.collide(player, layer);
+        game.physics.arcade.collide(stoppers, layer);
+
+        game.physics.arcade.collide(stoppers, blobs);
+        game.physics.arcade.collide(stoppers, zombies);
+        // game.physics.arcade.collide(stoppers, wizards);
 
         game.physics.arcade.overlap(stars, player, collectStar, null, this);
         game.physics.arcade.overlap(hearts, player, collectHealth, null, this);
@@ -234,10 +244,13 @@ window.onload = function() {
         let s = 0;
         let copyRect = { x: 0, y: 0, w: wavePixelChunk, h: 35 };
         let copyPoint = { x: 0, y: 0 };
+        
         // Patroling for blobs
         for(key in blobs.children) {
+            //console.log(blobs.children[key].body.velocity.x)
             if (!blobs.children[key].body.velocity.x) {
                 blobX *= -1;
+                console.log()
                 blobs.children[key].body.velocity.x = blobX;
             }
         }
@@ -338,6 +351,12 @@ window.onload = function() {
                 heart.body.gravity.y = 300;
                 heart.body.bounce.y = 0.7 + Math.random() * 0.2;
 
+            } else if (Entity["name"] === "stopper") 
+            {
+                 let stopper = stoppers.create(Entity["x"], Entity["y"]);
+                 console.log(stopper)
+                 stopper.body.collideWorldBounds = true;
+                 stopper.body.immovable = true;
             }
         }
     }

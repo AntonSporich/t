@@ -301,6 +301,28 @@
                  "width":0,
                  "x":1257.5,
                  "y":435.5
+                }, 
+                {
+                 "height":60,
+                 "id":56,
+                 "name":"stopper",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":15,
+                 "x":351,
+                 "y":68
+                }, 
+                {
+                 "height":60,
+                 "id":61,
+                 "name":"stopper",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":15,
+                 "x":217.5,
+                 "y":391
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -309,7 +331,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":56,
+ "nextobjectid":62,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":16,
@@ -318,7 +340,7 @@
          "columns":17,
          "firstgid":1,
          "image":"tiles.png",
-         "imageheight":64,
+         "imageheight":77,
          "imagewidth":272,
          "margin":0,
          "name":"tiles",
