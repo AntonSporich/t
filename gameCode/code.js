@@ -4,10 +4,10 @@ window.onload = function() {
     var game = new Phaser.Game(1025, 480, Phaser.CANVAS, 'gameAround', { preload: preload, create: create, update: update});
 
     function preload() {
-        game.load.audio('song1', 'assets/sounds/1.wav');
-        game.load.audio('song2', 'assets/sounds/2.wav');
-        game.load.audio('song3', 'assets/sounds/3.wav');
-        game.load.audio('laugh', 'assets/sounds/laugh.wav');
+        game.load.audio('song1', 'assets/sounds/1.mp3');
+        game.load.audio('song2', 'assets/sounds/2.mp3');
+        game.load.audio('song3', 'assets/sounds/3.mp3');
+        game.load.audio('laugh', 'assets/sounds/laugh.mp3');
 
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('game-over', 'assets/game-over.png');
