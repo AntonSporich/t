@@ -4,6 +4,8 @@ window.onload = function() {
     var game = new Phaser.Game(1025, 480, Phaser.CANVAS, 'gameAround', { preload: preload, create: create, update: update});
 
     function preload() {
+        game.load.audio('song1', 'assets/sounds/1.mp3');
+        game.load.audio('song2', 'assets/sounds/2.mp3');
 
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('game-over', 'assets/game-over.png');
@@ -37,7 +39,10 @@ window.onload = function() {
     let heartScale;
     let firstScaleHeartX = 150;
 
-
+    let song1;
+    let song2;
+    let song3;
+    let nowPlaying;
 
     let score = 0;
     let jumpTimer = 0;
@@ -66,6 +71,15 @@ window.onload = function() {
 
         background = game.add.tileSprite(0, 0, 1920, 480, 'dungeon');
         background.fixedToCamera = true;
+
+        song1 = game.add.audio('song1');
+        song2 = game.add.audio('song2');
+
+        let arr = [song1, song2];
+
+        for (let i = 0; i < arr.length; i++) {
+            nowPlaying = arr[i].play();
+        }
 
         map = game.add.tilemap('level1');
         map.addTilesetImage('tiles');
@@ -219,7 +233,7 @@ window.onload = function() {
         {
             console.log("game over");
             player.kill();
-            youLose = game.add.sprite(0, 70, 'game-over');
+            youLose = game.add.sprite(0, -480, 'game-over');
 
             document.body.onkeyup = function(e) {
                 if (e.keyCode === 32)

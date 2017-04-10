@@ -151,7 +151,7 @@
                 {
                  "height":31,
                  "id":21,
-                 "name":"zombie",
+                 "name":"ghost",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -288,8 +288,8 @@
                  "type":"",
                  "visible":true,
                  "width":39,
-                 "x":2356.83333333333,
-                 "y":428.833333333333
+                 "x":52,
+                 "y":52
                 }, 
                 {
                  "height":0,
