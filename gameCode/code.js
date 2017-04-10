@@ -143,8 +143,8 @@ window.onload = function() {
         game.physics.arcade.overlap(stars, player, collectStar, null, this);
         game.physics.arcade.overlap(hearts, player, collectHealth, null, this);
         game.physics.arcade.overlap(blobs, player, blobKills, null, this);
-        game.physics.arcade.overlap(zombies, player, zombieKills, null, this);
-        game.physics.arcade.overlap(ghosts, player, ghostKills, null, this);
+        game.physics.arcade.overlap(zombies, player, enemyKills, null, this);
+        game.physics.arcade.overlap(ghosts, player, enemyKills, null, this);
 
 
         player.body.velocity.x = 0;
@@ -184,7 +184,7 @@ window.onload = function() {
 
         }
         else if ((cursors.down.isDown || keys.kick.isDown) &&
-        (cursors.down.downDuration(800) || keys.kick.downDuration(800)))
+        (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
         {
             if(playerX === 0) {
                 player.animations.play('leftKick');
@@ -264,14 +264,14 @@ window.onload = function() {
 
     function blobKills(player, blob) {
         if ((cursors.down.isDown || keys.kick.isDown) && playerX === 0
-        && player.body.x > blob.body.x && (!cursors.down.downDuration(200) && !keys.kick.downDuration(200))
-        && (cursors.down.downDuration(800) || keys.kick.downDuration(800)))
+        && player.body.x > blob.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
+        && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
         {
             blob.kill();
         }
         else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
-        && player.body.x < blob.body.x && (!cursors.down.downDuration(200) && !keys.kick.downDuration(200))
-        && (cursors.down.downDuration(800) || keys.kick.downDuration(800)))
+        && player.body.x < blob.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
+        && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
         {
             blob.kill();
         }
@@ -283,16 +283,16 @@ window.onload = function() {
         }
     }
 
-    function zombieKills(player, zombie) {
+    function enemyKills(player, zombie) {
         if ((cursors.down.isDown || keys.kick.isDown) && playerX === 0
-        && player.body.x > zombie.body.x && (!cursors.down.downDuration(200) && !keys.kick.downDuration(200))
-        && (cursors.down.downDuration(800) || keys.kick.downDuration(800)))
+        && player.body.x > zombie.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
+        && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
         {
             zombie.kill();
         }
         else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
-        && player.body.x < zombie.body.x && (!cursors.down.downDuration(200) && !keys.kick.downDuration(200))
-        && (cursors.down.downDuration(800) || keys.kick.downDuration(800)))
+        && player.body.x < zombie.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
+        && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
         {
             zombie.kill();
         }
@@ -370,19 +370,20 @@ window.onload = function() {
 
     function UpdateGhost () {
         for(key in ghosts.children) {
-            if(Math.abs(ghosts.children[key].body.x - player.body.x) < 150 && Math.abs(ghosts.children[key].body.y - player.body.y) < 60) {
+            if(Math.abs(ghosts.children[key].body.x - player.body.x) < 200 && Math.abs(ghosts.children[key].body.y - player.body.y) < 60) {
                 if(ghosts.children[key].body.x > player.body.x) {
-                    ghosts.children[key].body.velocity.x = - 120;
-                    ghost.animations.stop();
-                    ghost.frame = 8;
+                    ghosts.children[key].animations.play('attakLeft');
+                    ghosts.children[key].body.velocity.x = - 250;
                 }
                 else if (ghosts.children[key].body.x < player.body.x) {
-                    ghosts.children[key].body.velocity.x =  120;
-                    ghosts.children[key].animations.stop();
-                    ghosts.children[key].frame = 7;
+                    ghosts.children[key].animations.play('attakRight');
+                    ghosts.children[key].body.velocity.x =  250;
                 }
             }
-            ghosts.children[key].animations.play('idle');
+            else {
+                ghosts.children[key].animations.play('idle');
+                ghosts.children[key].body.velocity.x =  ghostX;
+            }
         }
     }
 
@@ -404,8 +405,8 @@ window.onload = function() {
 
                 player.animations.add('left', [4, 5, 6, 7], 3, true);
                 player.animations.add('right', [0, 1, 2, 3], 3, true);
-                player.animations.add('rightKick', [8, 9, 10, 11], 5, true);
-                player.animations.add('leftKick', [12, 13, 14, 15], 5, true);
+                player.animations.add('rightKick', [8, 9, 10, 11], 8, true);
+                player.animations.add('leftKick', [12, 13, 14, 15], 8, true);
 
             }
             else if (Entity["name"] === "blob")
@@ -448,10 +449,12 @@ window.onload = function() {
             } else if (Entity["name"] === "ghost")
             {
                 ghost = ghosts.create(Entity["x"], Entity["y"], "ghost")
-                zombie.body.collideWorldBounds = true;
-                zombie.body.gravity.y = 1100;
-                zombie.animations.add('idle', [0, 1, 2, 3, 4, 5], 5, true);
-                zombie.body.velocity.x = ghostX;
+                ghost.body.collideWorldBounds = true;
+                ghost.body.gravity.y = 1100;
+                ghost.animations.add('idle', [0, 1, 2, 3, 4,], 5, true);
+                ghost.animations.add('attakRight', [5], 5, true);
+                ghost.animations.add('attakLeft', [6], 5, true);
+                ghost.body.velocity.x = ghostX;
             }
         }
     }
