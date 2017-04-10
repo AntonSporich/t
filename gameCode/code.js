@@ -23,6 +23,7 @@ window.onload = function() {
     let tileset;
     let layer;
     let cursors;
+    let keys;
     let scoreText;
     let background;
 
@@ -99,6 +100,7 @@ window.onload = function() {
         threeLives();
 
         cursors = game.input.keyboard.createCursorKeys();
+        keys = game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W,'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D, 'kick':Phaser.Keyboard.SPACEBAR});
     }
 
     function update() {
@@ -123,14 +125,16 @@ window.onload = function() {
 
         player.body.velocity.x = 0;
         // Movements of Player
-        if (cursors.left.isDown && player.body.onFloor() && !cursors.down.isDown)
+        if ((cursors.left.isDown || keys.left.isDown)
+        && player.body.onFloor() && (!cursors.down.isDown || !keys.kick.isDown))
         {
             player.body.velocity.x = -150;
             player.animations.play('left');
             playerX = 0;
 
         }
-        else if (cursors.left.isDown && !player.body.onFloor() && !cursors.down.isDown)
+        else if ((cursors.left.isDown || keys.left.isDown)
+        && !player.body.onFloor() && (!cursors.down.isDown || !keys.kick.isDown))
         {
             player.body.velocity.x = -150;
             player.animations.stop();
@@ -138,14 +142,16 @@ window.onload = function() {
             playerX = 0;
 
         }
-        else if (cursors.right.isDown && player.body.onFloor() && !cursors.down.isDown)
+        else if ((cursors.right.isDown || keys.right.isDown)
+        && player.body.onFloor() && (!cursors.down.isDown || !keys.kick.isDown))
         {
             player.body.velocity.x = 150;
             player.animations.play('right');
             playerX = 1;
 
         }
-        else if (cursors.right.isDown && !player.body.onFloor() && !cursors.down.isDown)
+        else if ((cursors.right.isDown || keys.right.isDown)
+        && !player.body.onFloor() && (!cursors.down.isDown || !keys.kick.isDown))
         {
             player.body.velocity.x = 150;
             player.animations.stop();
@@ -153,7 +159,8 @@ window.onload = function() {
             playerX = 1;
 
         }
-        else if (cursors.down.isDown && cursors.down.downDuration(800))
+        else if ((cursors.down.isDown || keys.kick.isDown) &&
+        (cursors.down.downDuration(800) || keys.kick.downDuration(800)))
         {
             if(playerX === 0) {
                 player.animations.play('leftKick');
@@ -164,7 +171,8 @@ window.onload = function() {
         }
 
         //  Allow the players to jump if they are touching the ground.
-        else if (cursors.up.isDown && player.body.onFloor() && game.time.now > jumpTimer)
+        else if ((cursors.up.isDown || keys.up.isDown)
+        && player.body.onFloor() && game.time.now > jumpTimer)
         {
             player.body.velocity.y = -500;
             jumpTimer = game.time.now + 900;
@@ -230,12 +238,16 @@ window.onload = function() {
     }
 
     function blobKills(player, blob) {
-        if (cursors.down.isDown && playerX === 0 && player.body.x > blob.body.x
-            && !cursors.down.downDuration(200) && cursors.down.downDuration(800)) {
+        if ((cursors.down.isDown || keys.kick.isDown) && playerX === 0
+        && player.body.x > blob.body.x && (!cursors.down.downDuration(200) && !keys.kick.downDuration(200))
+        && (cursors.down.downDuration(800) || keys.kick.downDuration(800)))
+        {
             blob.kill();
         }
-        else if(cursors.down.isDown && playerX === 1 && player.body.x < blob.body.x
-            && !cursors.down.downDuration(200) && cursors.down.downDuration(800)) {
+        else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
+        && player.body.x < blob.body.x && (!cursors.down.downDuration(200) && !keys.kick.downDuration(200))
+        && (cursors.down.downDuration(800) || keys.kick.downDuration(800)))
+        {
             blob.kill();
         }
         else {
@@ -247,12 +259,16 @@ window.onload = function() {
     }
 
     function zombieKills(player, zombie) {
-        if(cursors.down.isDown && playerX === 0 && player.body.x > zombie.body.x
-            && !cursors.down.downDuration(200) && cursors.down.downDuration(800)) {
+        if ((cursors.down.isDown || keys.kick.isDown) && playerX === 0
+        && player.body.x > zombie.body.x && (!cursors.down.downDuration(200) && !keys.kick.downDuration(200))
+        && (cursors.down.downDuration(800) || keys.kick.downDuration(800)))
+        {
             zombie.kill();
         }
-        else if(cursors.down.isDown && playerX === 1 && player.body.x < zombie.body.x
-            && !cursors.down.downDuration(200) && cursors.down.downDuration(800)) {
+        else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
+        && player.body.x < zombie.body.x && (!cursors.down.downDuration(200) && !keys.kick.downDuration(200))
+        && (cursors.down.downDuration(800) || keys.kick.downDuration(800)))
+        {
             zombie.kill();
         }
         else if (Math.abs(zombie.body.x - player.body.x) < 20)
