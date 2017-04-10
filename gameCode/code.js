@@ -4,8 +4,10 @@ window.onload = function() {
     var game = new Phaser.Game(1025, 480, Phaser.CANVAS, 'gameAround', { preload: preload, create: create, update: update});
 
     function preload() {
-        game.load.audio('song1', 'assets/sounds/1.mp3');
-        game.load.audio('song2', 'assets/sounds/2.mp3');
+        game.load.audio('song1', 'assets/sounds/1.wav');
+        game.load.audio('song2', 'assets/sounds/2.wav');
+        game.load.audio('song3', 'assets/sounds/3.wav');
+        game.load.audio('laugh', 'assets/sounds/laugh.wav');
 
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('game-over', 'assets/game-over.png');
@@ -42,6 +44,8 @@ window.onload = function() {
     let song1;
     let song2;
     let song3;
+    let song4;
+
     let nowPlaying;
 
     let score = 0;
@@ -74,12 +78,14 @@ window.onload = function() {
 
         song1 = game.add.audio('song1');
         song2 = game.add.audio('song2');
+        song3 = game.add.audio('song3');
 
-        let arr = [song1, song2];
+        let arr = [song1, song2, song3];
 
-        for (let i = 0; i < arr.length; i++) {
-            nowPlaying = arr[i].play();
-        }
+        let k = arr[Math.round(0- 0.5 + Math.random() * ((arr.length - 1) - 0 + 1))].play("", 0 , 0.1, false, true)
+        k.volume = 0.1;
+        
+  
 
         map = game.add.tilemap('level1');
         map.addTilesetImage('tiles');
@@ -125,7 +131,6 @@ window.onload = function() {
     }
 
     function update() {
-
 
         game.physics.arcade.collide(stars, layer);
         game.physics.arcade.collide(hearts, layer)
@@ -230,10 +235,13 @@ window.onload = function() {
         // }
 
         if (heartScale["children"].length === 0)
-        {
-            console.log("game over");
+        {   
+            song2.stop();
+            let laugh = game.add.audio('laugh'); 
+            laugh.play();
             player.kill();
-            youLose = game.add.sprite(0, -480, 'game-over');
+            youLose = game.add.sprite(0, 0, 'game-over');
+            youLose.fixedToCamera = true
 
             document.body.onkeyup = function(e) {
                 if (e.keyCode === 32)
