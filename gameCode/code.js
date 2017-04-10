@@ -14,6 +14,7 @@ window.onload = function() {
         game.load.image('heart', 'assets/health.png');
         game.load.atlasJSONArray('dude', 'assets/knight1.png', 'assets/knight1.json');
         game.load.atlasJSONArray('zombie', 'assets/zombie1.png', 'assets/zombie1.json');
+        game.load.atlasJSONArray('ghost', 'assets/ghost.png', 'assets/ghost.json');
 
     }
 
@@ -54,6 +55,10 @@ window.onload = function() {
     let zombie;
     let zombieX = -30;
 
+    let ghosts;
+    let ghost;
+    let ghostX = 0;
+
     let youLose;
 
     function create() {
@@ -84,6 +89,9 @@ window.onload = function() {
         zombies = game.add.group();
         zombies.enableBody = true;
 
+        ghosts = game.add.group();
+        ghosts.enableBody = true;
+
         stoppers = game.add.group();
         stoppers.enableBody = true;
 
@@ -109,6 +117,7 @@ window.onload = function() {
         game.physics.arcade.collide(hearts, layer)
         game.physics.arcade.collide(blobs, layer);
         game.physics.arcade.collide(zombies, layer);
+        game.physics.arcade.collide(ghosts, layer);
         game.physics.arcade.collide(player, layer);
         game.physics.arcade.collide(stoppers, layer);
 
@@ -121,6 +130,7 @@ window.onload = function() {
         game.physics.arcade.overlap(hearts, player, collectHealth, null, this);
         game.physics.arcade.overlap(blobs, player, blobKills, null, this);
         game.physics.arcade.overlap(zombies, player, zombieKills, null, this);
+        game.physics.arcade.overlap(ghosts, player, ghostKills, null, this);
 
 
         player.body.velocity.x = 0;
@@ -222,6 +232,7 @@ window.onload = function() {
         bitMapData.cls();
         updateNastyBlob();
         UpdateZombie();
+        UpdateGhost();
     }
 
     function collectStar (player, star) {
@@ -280,6 +291,10 @@ window.onload = function() {
         }
     }
 
+    function ghostKills(player, ghost) {
+
+    }
+
     function updateNastyBlob() {
         let s = 0;
         let copyRect = { x: 0, y: 0, w: wavePixelChunk, h: 35 };
@@ -317,7 +332,7 @@ window.onload = function() {
 
     function UpdateZombie () {
         for(key in zombies.children) {
-            if(Math.abs(zombies.children[key].body.x - player.body.x) < 100 && Math.abs(zombies.children[key].body.y - player.body.y) < 60){
+            if(Math.abs(zombies.children[key].body.x - player.body.x) < 100 && Math.abs(zombies.children[key].body.y - player.body.y) < 60) {
                 if(zombies.children[key].body.x > player.body.x) {
                     zombies.children[key].body.velocity.x = - 90;
                 }
@@ -336,6 +351,24 @@ window.onload = function() {
                 else if (zombies.children[key].body.velocity.x > 0) {
                     zombies.children[key].animations.play('moveRight');
                 }
+        }
+    }
+
+    function UpdateGhost () {
+        for(key in ghosts.children) {
+            if(Math.abs(ghosts.children[key].body.x - player.body.x) < 150 && Math.abs(ghosts.children[key].body.y - player.body.y) < 60) {
+                if(ghosts.children[key].body.x > player.body.x) {
+                    ghosts.children[key].body.velocity.x = - 120;
+                    ghost.animations.stop();
+                    ghost.frame = 8;
+                }
+                else if (ghosts.children[key].body.x < player.body.x) {
+                    ghosts.children[key].body.velocity.x =  120;
+                    ghosts.children[key].animations.stop();
+                    ghosts.children[key].frame = 7;
+                }
+            }
+            ghosts.children[key].animations.play('idle');
         }
     }
 
@@ -398,6 +431,13 @@ window.onload = function() {
                  console.log(stopper)
                  stopper.body.collideWorldBounds = true;
                  stopper.body.immovable = true;
+            } else if (Entity["name"] === "ghost")
+            {
+                ghost = ghosts.create(Entity["x"], Entity["y"], "ghost")
+                zombie.body.collideWorldBounds = true;
+                zombie.body.gravity.y = 1100;
+                zombie.animations.add('idle', [0, 1, 2, 3, 4, 5], 5, true);
+                zombie.body.velocity.x = ghostX;
             }
         }
     }
