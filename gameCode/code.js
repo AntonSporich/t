@@ -12,7 +12,6 @@ window.onload = function() {
         game.load.image('blob', 'assets/ball.png');
         game.load.image('dungeon', 'assets/dungeon.png');
         game.load.image('heart', 'assets/health.png');
-        game.load.image('stopper', 'assets/stopper.png')
         game.load.atlasJSONArray('dude', 'assets/knight1.png', 'assets/knight1.json');
         game.load.atlasJSONArray('zombie', 'assets/zombie1.png', 'assets/zombie1.json');
 
@@ -115,6 +114,7 @@ window.onload = function() {
 
         game.physics.arcade.collide(stoppers, blobs);
         game.physics.arcade.collide(stoppers, zombies);
+        game.physics.arcade.collide(stoppers, stars);
         // game.physics.arcade.collide(stoppers, wizards);
 
         game.physics.arcade.overlap(stars, player, collectStar, null, this);
