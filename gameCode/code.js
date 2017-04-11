@@ -19,6 +19,8 @@ window.onload = function() {
         game.load.atlasJSONArray('dude', 'assets/knight1.png', 'assets/knight1.json');
         game.load.atlasJSONArray('zombie', 'assets/zombie1.png', 'assets/zombie1.json');
         game.load.atlasJSONArray('ghost', 'assets/ghost.png', 'assets/ghost.json');
+        game.load.atlasJSONArray('wizard', 'assets/wizard.png', 'assets/wizard.json');
+        game.load.image('mageBullet', 'assets/bullet2.png');
 
     }
 
@@ -64,9 +66,18 @@ window.onload = function() {
     let zombie;
     let zombieX = -30;
 
+    // Ghost
     let ghosts;
     let ghost;
     let ghostX = 0;
+
+    // Wizard
+    let wizard;
+    let wizards;
+    let wizardX = 70;
+    let mageBullet;
+    let mageBullets;
+    let firingTimer = 0;
 
     let youLose;
 
@@ -113,6 +124,16 @@ window.onload = function() {
         ghosts = game.add.group();
         ghosts.enableBody = true;
 
+        wizards = game.add.group();
+        wizards.enableBody = true;
+        mageBullets = game.add.group();
+        mageBullets.enableBody = true;
+
+        mageBullets.setAll('anchor.x', 0.5);
+        mageBullets.setAll('anchor.y', 1);
+        mageBullets.setAll('outOfBoundsKill', true);
+        mageBullets.setAll('checkWorldBounds', true);
+
         stoppers = game.add.group();
         stoppers.enableBody = true;
 
@@ -138,11 +159,13 @@ window.onload = function() {
         game.physics.arcade.collide(blobs, layer);
         game.physics.arcade.collide(zombies, layer);
         game.physics.arcade.collide(ghosts, layer);
+        game.physics.arcade.collide(wizards, layer);
         game.physics.arcade.collide(player, layer);
         game.physics.arcade.collide(stoppers, layer);
 
         game.physics.arcade.collide(stoppers, blobs);
         game.physics.arcade.collide(stoppers, zombies);
+        game.physics.arcade.collide(stoppers, wizards);
         game.physics.arcade.collide(stoppers, stars);
         // game.physics.arcade.collide(stoppers, wizards);
 
@@ -151,6 +174,8 @@ window.onload = function() {
         game.physics.arcade.overlap(blobs, player, blobKills, null, this);
         game.physics.arcade.overlap(zombies, player, enemyKills, null, this);
         game.physics.arcade.overlap(ghosts, player, enemyKills, null, this);
+        game.physics.arcade.overlap(wizards, player, enemyKills, null, this);
+        game.physics.arcade.overlap(mageBullets, player, bulletsKill, null, this);
 
 
         player.body.velocity.x = 0;
@@ -256,6 +281,7 @@ window.onload = function() {
         updateNastyBlob();
         UpdateZombie();
         UpdateGhost();
+        UpdateWizard();
     }
 
     function collectStar (player, star) {
@@ -312,10 +338,6 @@ window.onload = function() {
             firstScaleHeartX -= 20;
             player.reset(52, 52);
         }
-    }
-
-    function ghostKills(player, ghost) {
-
     }
 
     function updateNastyBlob() {
@@ -396,6 +418,52 @@ window.onload = function() {
         }
     }
 
+    function UpdateWizard () {
+        for(key in wizards.children) {
+                if(wizards.children[key].body.velocity.x < 0) {
+                    wizards.children[key].animations.play('moveLeft');
+                }
+                else if (wizards.children[key].body.velocity.x > 0) {
+                    wizards.children[key].animations.play('moveRight');
+                }
+                if(Math.abs(wizards.children[key].body.x - player.body.x) < 600 && Math.abs(wizards.children[key].body.y - player.body.y) < 20) {
+                    if (game.time.now > firingTimer) {
+                        mageBullet = mageBullets.create(wizards.children[key].body.x, (wizards.children[key].body.y + 10), 'mageBullet')
+                        if(mageBullet.body.x > player.body.x) {
+                            mageBullet.body.velocity.x = - 150;
+                        }
+                        else if(mageBullet.body.x < player.body.x) {
+                            mageBullet.body.velocity.x = 150;
+                        }
+                        firingTimer = game.time.now + 6000;
+                    }
+                }
+                if(Math.abs(wizards.children[key].body.x - player.body.x) < 100 && Math.abs(wizards.children[key].body.y - player.body.y) < 60) {
+                    if(wizards.children[key].body.x > player.body.x) {
+                        wizards.children[key].body.velocity.x = - 120;
+                        wizards.children[key].animations.play('attakLeft');
+                    }
+                    else if (wizards.children[key].body.x < player.body.x) {
+                        wizards.children[key].body.velocity.x =  120;
+                        wizards.children[key].animations.play('attakRight');
+                    }
+                }
+                if (!wizards.children[key].body.velocity.x) {
+                    wizardX *= -1;
+                    wizards.children[key].body.velocity.x = wizardX;
+                }
+        }
+    }
+
+    function bulletsKill(player, mageBullet) {
+        if(Math.abs(mageBullet.body.x - player.body.x) < 20) {
+            player.kill();
+            heartScale["children"].pop();
+            firstScaleHeartX -= 20;
+            player.reset(52, 152);
+        }
+    }
+
     function enetetiesPositioning() {
 
         let objArr = map["objects"]["Object Layer 1"];
@@ -464,6 +532,16 @@ window.onload = function() {
                 ghost.animations.add('attakRight', [5], 5, true);
                 ghost.animations.add('attakLeft', [6], 5, true);
                 ghost.body.velocity.x = ghostX;
+            } else if (Entity["name"] === "wizard")
+            {
+                wizard = wizards.create(Entity["x"], Entity["y"], "wizard")
+                wizard.body.collideWorldBounds = true;
+                wizard.body.gravity.y = 1100;
+                wizard.animations.add('moveLeft', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 6, true);
+                wizard.animations.add('moveRight', [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], 6, true);
+                wizard.animations.add('attakRight', [27, 28, 29], 6, true);
+                wizard.animations.add('attakLeft', [24, 25, 26], 6, true);
+                wizard.body.velocity.x = wizardX;
             }
         }
     }
