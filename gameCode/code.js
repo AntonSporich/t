@@ -84,8 +84,8 @@ window.onload = function() {
 
         let k = arr[Math.round(0- 0.5 + Math.random() * ((arr.length - 1) - 0 + 1))].play("", 0 , 0.1, false, true)
         k.volume = 0.1;
-        
-  
+
+
 
         map = game.add.tilemap('level1');
         map.addTilesetImage('tiles');
@@ -93,6 +93,7 @@ window.onload = function() {
         game.add.existing(layer);
         layer.resizeWorld();
         map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
+        map.forEach(function (t) { if (t) { t.collideDown = false;} }, game, 0, 0, map.width, map.height, layer);
 
         bitMapData = game.add.bitmapData(32, 64);
         waveData = game.math.sinCosGenerator(32, 8, 8, 2);
@@ -235,9 +236,9 @@ window.onload = function() {
         // }
 
         if (heartScale["children"].length === 0)
-        {   
+        {
             song2.stop();
-            let laugh = game.add.audio('laugh'); 
+            let laugh = game.add.audio('laugh');
             laugh.play();
             player.kill();
             youLose = game.add.sprite(0, 0, 'game-over');
@@ -354,12 +355,12 @@ window.onload = function() {
 
     function UpdateZombie () {
         for(key in zombies.children) {
-            if(Math.abs(zombies.children[key].body.x - player.body.x) < 100 && Math.abs(zombies.children[key].body.y - player.body.y) < 60) {
+            if(Math.abs(zombies.children[key].body.x - player.body.x) < 200 && Math.abs(zombies.children[key].body.y - player.body.y) < 60) {
                 if(zombies.children[key].body.x > player.body.x) {
-                    zombies.children[key].body.velocity.x = - 90;
+                    zombies.children[key].body.velocity.x = - 120;
                 }
                 else if (zombies.children[key].body.x < player.body.x) {
-                    zombies.children[key].body.velocity.x =  90;
+                    zombies.children[key].body.velocity.x =  120;
                 }
             }
                 if (!zombies.children[key].body.velocity.x) {
