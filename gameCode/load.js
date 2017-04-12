@@ -5,15 +5,17 @@ let loadState = {
         let loadingLabel = game.add.text(460, 330, 'Loading...', {fill: '#fff'});
                 
         preloadBar.anchor.setTo(0);
-
         game.load.setPreloadSprite(preloadBar);
 
         game.load.audio('song1', 'assets/sounds/1.mp3');
         game.load.audio('song2', 'assets/sounds/2.mp3');
         game.load.audio('song3', 'assets/sounds/3.mp3');
+        game.load.audio('winSong', 'assets/sounds/win.mp3');
+        game.load.audio('playerDead', 'assets/sounds/playerDead.wav');
         game.load.audio('laugh', 'assets/sounds/laugh.mp3');
 
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('win', 'assets/win.png');
         game.load.image('game-over', 'assets/game-over.png');
         game.load.image('tiles', 'assets/levels/tiles.png');
         game.load.image('star', 'assets/star.png');

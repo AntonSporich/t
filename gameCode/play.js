@@ -21,6 +21,7 @@
     let song2;
     let song3;
     let song4;
+    let playerDeadSound;
 
     let nowPlaying;
 
@@ -53,8 +54,6 @@
     let mageBullets;
     let firingTimer = 0;
 
-    let youLose;
-
 let playState = {
 	create: function() {
 		background = game.add.tileSprite(0, 0, 1920, 480, 'dungeon');
@@ -66,8 +65,10 @@ let playState = {
 
         let arr = [song1, song2, song3];
 
-        let k = arr[Math.round(0- 0.5 + Math.random() * ((arr.length - 1) - 0 + 1))].play("", 0 , 0.1, false, true)
-        k.volume = 0.1;
+        nowPlaying = arr[Math.round(0- 0.5 + Math.random() * ((arr.length - 1) - 0 + 1))].play("", 0 , 0.1, false, true)
+        nowPlaying.volume = 0.1;
+
+        playerDeadSound = game.add.audio('playerDead');
 
         map = game.add.tilemap('level1');
         map.addTilesetImage('tiles');
@@ -75,9 +76,9 @@ let playState = {
         game.add.existing(layer);
         layer.resizeWorld();
         map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
-        map.forEach(function (t) { if (t) { t.collideDown = false;} }, game, 0, 0, map.width, map.height, layer);
+        //map.forEach(function (t) { if (t) { t.collideDown = false;} }, game, 0, 0, map.width, map.height, layer);
 
-         bitMapData = game.add.bitmapData(32, 64);
+        bitMapData = game.add.bitmapData(32, 64);
         waveData = game.math.sinCosGenerator(32, 8, 8, 2);
 
         stars = game.add.group();
@@ -110,7 +111,7 @@ let playState = {
 
         this.enetetiesPositioning();
 
-        scoreText = game.add.text(16, 16, 'Hearts: 0/666', { fontSize: '18px', fill: '#fff' });
+        scoreText = game.add.text(16, 16, 'Remains: 0/666', { fontSize: '18px', fill: '#fff' });
         scoreText.fixedToCamera = true;
 
         heartScale = game.add.group();
@@ -137,7 +138,6 @@ let playState = {
         game.physics.arcade.collide(stoppers, zombies);
         game.physics.arcade.collide(stoppers, wizards);
         game.physics.arcade.collide(stoppers, stars);
-        // game.physics.arcade.collide(stoppers, wizards);
 
         game.physics.arcade.overlap(stars, player, this.collectStar, null, this);
         game.physics.arcade.overlap(hearts, player, this.collectHealth, null, this);
@@ -230,9 +230,19 @@ let playState = {
         //    blob.body.velocity.x = 120;
         // }
 
+        //Lose and win
         if (heartScale["children"].length === 0)
         {
-            game.state.start('lose')
+            nowPlaying.stop();
+            score = 0;
+            game.state.start('lose');
+        }
+
+        if (score === 3)
+        {   
+            nowPlaying.stop();
+            score = 0;
+        	game.state.start('win');
         }
 
         bitMapData.cls();
@@ -243,10 +253,12 @@ let playState = {
 	},
 
 	collectStar: function (player, star) {
-		star.kill();
+        if (player.x === 52) score--;
+        
+        star.kill();
         //  Add and update the score
-        score += 1;
-        scoreText.text = 'Hearts: ' + score + '/666';
+        score++;
+        scoreText.text = 'Remains: ' + score + '/666';
 	},
 
 
@@ -259,7 +271,8 @@ let playState = {
         if ((cursors.down.isDown || keys.kick.isDown) && playerX === 0
         && player.body.x > blob.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
         && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
-        {
+        {   
+
             blob.kill();
         }
         else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
@@ -294,7 +307,7 @@ let playState = {
             player.kill();
             heartScale["children"].pop();
             firstScaleHeartX -= 20;
-            player.reset(52, 52);
+            player.reset(52, 52, 'dude')
         }
     },
 

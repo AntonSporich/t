@@ -1,17 +1,20 @@
-let loseState = {
+let winSong;
+
+let winState = {
 	create: function() {
 
-		let laugh = game.add.audio('laugh');
-		laugh.play();
+		winSong = game.add.audio('winSong');
+		winSong.play();
 
-		let youLose = game.add.sprite(0, 0, 'game-over');
-		youLose.fixedToCamera = true;
+		let youWon = game.add.sprite(0, 0, 'win');
+		youWon.fixedToCamera = true;
 
 		let restartKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		restartKey.onDown.addOnce(this.restart, this);
 	},
 
 	restart: function() {
+		winSong.stop();
 		game.state.start('menu');
 	}
-}
+ }
