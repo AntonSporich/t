@@ -232,19 +232,7 @@ let playState = {
 
         if (heartScale["children"].length === 0)
         {
-            song2.stop();
-            let laugh = game.add.audio('laugh');
-            laugh.play();
-            player.kill();
-            youLose = game.add.sprite(0, 0, 'game-over');
-            youLose.fixedToCamera = true
-
-            document.body.onkeyup = function(e) {
-                if (e.keyCode === 32)
-                {
-                    location.reload();
-                }
-            }
+            game.state.start('lose')
         }
 
         bitMapData.cls();
