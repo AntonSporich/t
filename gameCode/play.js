@@ -55,6 +55,7 @@
     let mageBullet;
     let mageBullets;
     let firingTimer = 0;
+    let wizardChase = 100;
 
 let playState = {
 	create: function() {
@@ -131,7 +132,7 @@ let playState = {
         this.threeLives();
 
         cursors = game.input.keyboard.createCursorKeys();
-        keys = game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W,'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D, 'kick':Phaser.Keyboard.SPACEBAR});
+        keys = game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W,'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D, 'kick':Phaser.Keyboard.SPACEBAR, /*'suicide': Phaser.KeyCode.S*/});
 	},
 
 	update: function() {
@@ -212,6 +213,10 @@ let playState = {
             player.body.velocity.y = -500;
             jumpTimer = game.time.now + 900;
         }
+        // else if (keys.suicide.isDown) 
+        // {
+        //     this.killPlayer();
+        // }
         else
         {
             //  Stand idle
@@ -248,7 +253,7 @@ let playState = {
             game.state.start('lose');
         }
 
-        if (score === 3)
+        if (score === 10)
         {   
             nowPlaying.stop();
             score = 0;
@@ -294,11 +299,7 @@ let playState = {
             blob.kill();
         }
         else {
-            playerDeadSound.play();
-            player.kill();
-            heartScale["children"].pop();
-            firstScaleHeartX -= 20;
-            player.reset(52, 52)
+            this.killPlayer();
         }
     },
 
@@ -319,11 +320,7 @@ let playState = {
         }
         else if (Math.abs(zombie.body.x - player.body.x) < 20)
         {
-            player.kill();
-            playerDeadSound.play();
-            heartScale["children"].pop();
-            firstScaleHeartX -= 20;
-            player.reset(52, 52, 'dude')
+            this.killPlayer();
         }
     },
 
@@ -405,6 +402,7 @@ let playState = {
     },
 
     UpdateWizard: function  () {
+
         for(key in wizards.children) {
                 if(wizards.children[key].body.velocity.x < 0) {
                     wizards.children[key].animations.play('moveLeft');
@@ -423,16 +421,16 @@ let playState = {
                             mageBullet.body.velocity.x = 150;
                             wizards.children[key].body.velocity.x = 90;
                         }
-                        firingTimer = game.time.now + 6000;
+                        firingTimer = game.time.now + 3000;
                     }
                 }
                 if(Math.abs(wizards.children[key].body.x - player.body.x) < 100 && Math.abs(wizards.children[key].body.y - player.body.y) < 60) {
                     if(wizards.children[key].body.x > player.body.x) {
-                        wizards.children[key].body.velocity.x = - 120;
+                        wizards.children[key].body.velocity.x = - wizardChase;
                         wizards.children[key].animations.play('attakLeft');
                     }
                     else if (wizards.children[key].body.x < player.body.x) {
-                        wizards.children[key].body.velocity.x =  120;
+                        wizards.children[key].body.velocity.x =  wizardChase;
                         wizards.children[key].animations.play('attakRight');
                     }
                 }
@@ -445,10 +443,7 @@ let playState = {
 
     bulletsKill: function (player, mageBullet) {
         if(Math.abs(mageBullet.body.x - player.body.x) < 20) {
-            player.kill();
-            heartScale["children"].pop();
-            firstScaleHeartX -= 20;
-            player.reset(52, 152);
+            this.killPlayer();
         }
     },
 
@@ -529,6 +524,12 @@ let playState = {
                 wizard.animations.add('attakRight', [27, 28, 29], 6, true);
                 wizard.animations.add('attakLeft', [24, 25, 26], 6, true);
                 wizard.body.velocity.x = wizardX;
+
+                if(Entity["type"] === "stay") 
+                {   
+                    console.log('here')
+                    objArr.pop();
+                }
             }
         }
     },
@@ -538,6 +539,14 @@ let playState = {
             let sHeart = heartScale.create(firstScaleHeartX, 18, 'heart');
             firstScaleHeartX += 20;
         }
+    },
+
+    killPlayer: function() {
+        playerDeadSound.play();
+        player.kill();
+        heartScale["children"].pop();
+        firstScaleHeartX -= 20;
+        player.reset(52, 52);
     }
 
 }
