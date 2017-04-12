@@ -55,7 +55,7 @@
     let mageBullet;
     let mageBullets;
     let firingTimer = 0;
-    let wizardChase = 100;
+    let wizardChase = 120;
 
 let playState = {
 	create: function() {
@@ -117,6 +117,7 @@ let playState = {
         mageBullets.setAll('outOfBoundsKill', true);
         mageBullets.setAll('checkWorldBounds', true);
 
+
         stoppers = game.add.group();
         stoppers.enableBody = true;
 
@@ -142,6 +143,7 @@ let playState = {
         game.physics.arcade.collide(zombies, layer);
         game.physics.arcade.collide(ghosts, layer);
         game.physics.arcade.collide(wizards, layer);
+        game.physics.arcade.collide(mageBullets, layer, this.bulletLayer);
         game.physics.arcade.collide(player, layer);
         game.physics.arcade.collide(stoppers, layer);
 
@@ -213,7 +215,7 @@ let playState = {
             player.body.velocity.y = -500;
             jumpTimer = game.time.now + 900;
         }
-        // else if (keys.suicide.isDown) 
+        // else if (keys.suicide.isDown)
         // {
         //     this.killPlayer();
         // }
@@ -254,7 +256,7 @@ let playState = {
         }
 
         if (score === 10)
-        {   
+        {
             nowPlaying.stop();
             score = 0;
         	game.state.start('win');
@@ -287,14 +289,14 @@ let playState = {
         if ((cursors.down.isDown || keys.kick.isDown) && playerX === 0
         && player.body.x > blob.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
         && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
-        {   
+        {
             enemyDeadSound.play();
             blob.kill();
         }
         else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
         && player.body.x < blob.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
         && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
-        {   
+        {
             enemyDeadSound.play();
             blob.kill();
         }
@@ -360,12 +362,12 @@ let playState = {
 
     UpdateZombie: function  () {
         for(key in zombies.children) {
-            if(Math.abs(zombies.children[key].body.x - player.body.x) < 200 && Math.abs(zombies.children[key].body.y - player.body.y) < 60) {
+            if(Math.abs(zombies.children[key].body.x - player.body.x) < 150 && Math.abs(zombies.children[key].body.y - player.body.y) < 60) {
                 if(zombies.children[key].body.x > player.body.x) {
-                    zombies.children[key].body.velocity.x = - 120;
+                    zombies.children[key].body.velocity.x = - 180;
                 }
                 else if (zombies.children[key].body.x < player.body.x) {
-                    zombies.children[key].body.velocity.x =  120;
+                    zombies.children[key].body.velocity.x =  180;
                 }
             }
                 if (!zombies.children[key].body.velocity.x) {
@@ -410,18 +412,18 @@ let playState = {
                 else if (wizards.children[key].body.velocity.x > 0) {
                     wizards.children[key].animations.play('moveRight');
                 }
-                if(Math.abs(wizards.children[key].body.x - player.body.x) < 600 && Math.abs(wizards.children[key].body.y - player.body.y) < 20) {
+                if(Math.abs(wizards.children[key].body.x - player.body.x) < 500 && Math.abs(wizards.children[key].body.y - player.body.y) < 20) {
                     if (game.time.now > firingTimer) {
                         mageBullet = mageBullets.create(wizards.children[key].body.x, (wizards.children[key].body.y + 10), 'mageBullet')
                         if(mageBullet.body.x > player.body.x) {
-                            mageBullet.body.velocity.x = - 150;
+                            mageBullet.body.velocity.x = - 200;
                             wizards.children[key].body.velocity.x = - 90;
                         }
                         else if(mageBullet.body.x < player.body.x) {
-                            mageBullet.body.velocity.x = 150;
+                            mageBullet.body.velocity.x = 200;
                             wizards.children[key].body.velocity.x = 90;
                         }
-                        firingTimer = game.time.now + 3000;
+                        firingTimer = game.time.now + 6000;
                     }
                 }
                 if(Math.abs(wizards.children[key].body.x - player.body.x) < 100 && Math.abs(wizards.children[key].body.y - player.body.y) < 60) {
@@ -445,6 +447,10 @@ let playState = {
         if(Math.abs(mageBullet.body.x - player.body.x) < 20) {
             this.killPlayer();
         }
+
+    },
+    bulletLayer: function(mageBullets, layer) {
+            mageBullet.kill();
     },
 
     enetetiesPositioning: function () {
@@ -525,8 +531,8 @@ let playState = {
                 wizard.animations.add('attakLeft', [24, 25, 26], 6, true);
                 wizard.body.velocity.x = wizardX;
 
-                if(Entity["type"] === "stay") 
-                {   
+                if(Entity["type"] === "stay")
+                {
                     console.log('here')
                     objArr.pop();
                 }
