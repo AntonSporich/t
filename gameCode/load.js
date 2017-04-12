@@ -1,6 +1,12 @@
 let loadState = {
 	preload: function() {
-		let loadingLabel = game.add.text(80, 150, 'Loading...',{fill: '#fff'});
+	let preloadBar = game.add.sprite(0, game.world.centerY + 128, 'preloadBar');
+        let logo = game.add.sprite(game.world.centerY + 60, 60, 'logo');
+        let loadingLabel = game.add.text(460, 330, 'Loading...', {fill: '#fff'});
+                
+        preloadBar.anchor.setTo(0);
+
+        game.load.setPreloadSprite(preloadBar);
 
         game.load.audio('song1', 'assets/sounds/1.mp3');
         game.load.audio('song2', 'assets/sounds/2.mp3');
