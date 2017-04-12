@@ -2,6 +2,7 @@ let loseState = {
 	create: function() {
 
 		let laugh = game.add.audio('laugh');
+		laugh.volume = 0.09;
 		laugh.play();
 
 		let youLose = game.add.sprite(0, 0, 'game-over');

@@ -4,6 +4,7 @@ let winState = {
 	create: function() {
 
 		winSong = game.add.audio('winSong');
+		winSong.volume = 0.09;
 		winSong.play();
 
 		let youWon = game.add.sprite(0, 0, 'win');

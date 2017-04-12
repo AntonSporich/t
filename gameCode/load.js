@@ -12,7 +12,9 @@ let loadState = {
         game.load.audio('song3', 'assets/sounds/3.mp3');
         game.load.audio('winSong', 'assets/sounds/win.mp3');
         game.load.audio('playerDead', 'assets/sounds/playerDead.wav');
+        game.load.audio('enemyDead', 'assets/sounds/enemyDead.mp3')
         game.load.audio('laugh', 'assets/sounds/laugh.mp3');
+        game.load.audio('collect', 'assets/sounds/collect.wav')
 
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('win', 'assets/win.png');

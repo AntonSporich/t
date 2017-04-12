@@ -22,6 +22,8 @@
     let song3;
     let song4;
     let playerDeadSound;
+    let enemyDeadSound;
+    let collectSound;
 
     let nowPlaying;
 
@@ -65,10 +67,18 @@ let playState = {
 
         let arr = [song1, song2, song3];
 
-        nowPlaying = arr[Math.round(0- 0.5 + Math.random() * ((arr.length - 1) - 0 + 1))].play("", 0 , 0.1, false, true)
-        nowPlaying.volume = 0.1;
+        nowPlaying = arr[Math.round(0- 0.5 + Math.random() * ((arr.length - 1) - 0 + 1))].play();
+        nowPlaying.loop = true
+        nowPlaying.volume = 0.08;
 
         playerDeadSound = game.add.audio('playerDead');
+        playerDeadSound.volume = 0.03;
+
+        enemyDeadSound = game.add.audio('enemyDead');
+        enemyDeadSound.volume = 0.1;
+
+        collectSound = game.add.audio('collect');
+        collectSound.volume = 0.5;
 
         map = game.add.tilemap('level1');
         map.addTilesetImage('tiles');
@@ -254,7 +264,7 @@ let playState = {
 
 	collectStar: function (player, star) {
         if (player.x === 52) score--;
-        
+        collectSound.play();
         star.kill();
         //  Add and update the score
         score++;
@@ -263,6 +273,7 @@ let playState = {
 
 
     collectHealth: function (player, heart) {
+        collectSound.play();
         heart.kill();
         let sHeart = heartScale.create(firstScaleHeartX, 18, 'heart');
     },
@@ -272,16 +283,18 @@ let playState = {
         && player.body.x > blob.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
         && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
         {   
-
+            enemyDeadSound.play();
             blob.kill();
         }
         else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
         && player.body.x < blob.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
         && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
-        {
+        {   
+            enemyDeadSound.play();
             blob.kill();
         }
         else {
+            playerDeadSound.play();
             player.kill();
             heartScale["children"].pop();
             firstScaleHeartX -= 20;
@@ -294,17 +307,20 @@ let playState = {
         && player.body.x > zombie.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
         && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
         {
+            enemyDeadSound.play();
             zombie.destroy(true);
         }
         else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
         && player.body.x < zombie.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
         && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
         {
+            enemyDeadSound.play();
             zombie.destroy(true);
         }
         else if (Math.abs(zombie.body.x - player.body.x) < 20)
         {
             player.kill();
+            playerDeadSound.play();
             heartScale["children"].pop();
             firstScaleHeartX -= 20;
             player.reset(52, 52, 'dude')
