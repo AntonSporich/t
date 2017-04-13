@@ -66,11 +66,11 @@ let playState = {
         song2 = game.add.audio('song2');
         song3 = game.add.audio('song3');
 
+
         let arr = [song1, song2, song3];
 
         nowPlaying = arr[Math.round(0- 0.5 + Math.random() * ((arr.length - 1) - 0 + 1))].play();
-        nowPlaying.loop = true
-        nowPlaying.volume = 0.08;
+        nowPlaying.loopFull(0.6)
 
         playerDeadSound = game.add.audio('playerDead');
         playerDeadSound.volume = 0.03;
@@ -255,7 +255,7 @@ let playState = {
             game.state.start('lose');
         }
 
-        if (score === 10)
+        if (score === 55)
         {
             nowPlaying.stop();
             score = 0;
@@ -423,7 +423,7 @@ let playState = {
                             mageBullet.body.velocity.x = 200;
                             wizards.children[key].body.velocity.x = 90;
                         }
-                        firingTimer = game.time.now + 6000;
+                        firingTimer = game.time.now + 3000;
                     }
                 }
                 if(Math.abs(wizards.children[key].body.x - player.body.x) < 100 && Math.abs(wizards.children[key].body.y - player.body.y) < 60) {
