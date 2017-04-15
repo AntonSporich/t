@@ -3,7 +3,7 @@ let loadState = {
 	let preloadBar = game.add.sprite(0, game.world.centerY + 128, 'preloadBar');
         let logo = game.add.sprite(game.world.centerY + 60, 60, 'logo');
         let loadingLabel = game.add.text(460, 330, 'Loading...', {fill: '#fff'});
-                
+
         preloadBar.anchor.setTo(0);
         game.load.setPreloadSprite(preloadBar);
 
@@ -17,9 +17,11 @@ let loadState = {
         game.load.audio('collect', 'assets/sounds/collect.wav')
 
         game.load.tilemap('level1', 'assets/levels/level1.json', null, Phaser.Tilemap.TILED_JSON);
+		game.load.tilemap('level2', 'assets/levels/level2.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('win', 'assets/win.png');
         game.load.image('game-over', 'assets/game-over.png');
         game.load.image('tiles', 'assets/levels/tiles.png');
+		game.load.image('tiles2', 'assets/levels/tiles2.png');
         game.load.image('star', 'assets/star.png');
         game.load.image('blob', 'assets/ball.png');
         game.load.image('dungeon', 'assets/dungeon.png');

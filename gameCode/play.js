@@ -2,10 +2,13 @@
     //let objArr;
     let tileset;
     let layer;
+    let layer2;
     let cursors;
     let keys;
     let scoreText;
     let background;
+    let level;
+    let tiles;
 
     let player;
     let playerX;
@@ -55,7 +58,6 @@
     let mageBullet;
     let mageBullets;
     let firingTimer = 0;
-    let wizardChase = 120;
 
 let playState = {
 	create: function() {
@@ -81,13 +83,14 @@ let playState = {
         collectSound = game.add.audio('collect');
         collectSound.volume = 0.5;
 
-        map = game.add.tilemap('level1');
-        map.addTilesetImage('tiles');
+        map = game.add.tilemap(level);
+        map.addTilesetImage(tiles);
         layer = map.createLayer('Tile Layer 1');
+        layer2 = map.createLayer('Tile Layer 2');
         game.add.existing(layer);
         layer.resizeWorld();
         map.setCollisionByExclusion([ 13, 14, 15, 16, 46, 47, 48, 49, 50, 51 ]);
-        //map.forEach(function (t) { if (t) { t.collideDown = false;} }, game, 0, 0, map.width, map.height, layer);
+        map.forEach(function (t) { if (t) { t.collideDown = false;} }, game, 0, 0, map.width, map.height, layer);
 
         bitMapData = game.add.bitmapData(32, 64);
         waveData = game.math.sinCosGenerator(32, 8, 8, 2);
@@ -412,7 +415,7 @@ let playState = {
                 else if (wizards.children[key].body.velocity.x > 0) {
                     wizards.children[key].animations.play('moveRight');
                 }
-                if(Math.abs(wizards.children[key].body.x - player.body.x) < 500 && Math.abs(wizards.children[key].body.y - player.body.y) < 20) {
+                if(Math.abs(wizards.children[key].body.x - player.body.x) < 400 && Math.abs(wizards.children[key].body.y - player.body.y) < 20) {
                     if (game.time.now > firingTimer) {
                         mageBullet = mageBullets.create(wizards.children[key].body.x, (wizards.children[key].body.y + 10), 'mageBullet')
                         if(mageBullet.body.x > player.body.x) {
@@ -423,16 +426,16 @@ let playState = {
                             mageBullet.body.velocity.x = 200;
                             wizards.children[key].body.velocity.x = 90;
                         }
-                        firingTimer = game.time.now + 3000;
+                        firingTimer = game.time.now + 6000;
                     }
                 }
                 if(Math.abs(wizards.children[key].body.x - player.body.x) < 100 && Math.abs(wizards.children[key].body.y - player.body.y) < 60) {
                     if(wizards.children[key].body.x > player.body.x) {
-                        wizards.children[key].body.velocity.x = - wizardChase;
+                        wizards.children[key].body.velocity.x = - 140;
                         wizards.children[key].animations.play('attakLeft');
                     }
                     else if (wizards.children[key].body.x < player.body.x) {
-                        wizards.children[key].body.velocity.x =  wizardChase;
+                        wizards.children[key].body.velocity.x =  140;
                         wizards.children[key].animations.play('attakRight');
                     }
                 }
@@ -554,5 +557,9 @@ let playState = {
         firstScaleHeartX -= 20;
         player.reset(52, 52);
     }
-
 }
+
+playState.init = function (data) {
+    level = data.level;
+    tiles = data.tiles;
+};
