@@ -1,19 +1,161 @@
-<!doctype html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>Simple game</title>
-        <link rel="stylesheet" type="text/css" href="style/style.css">
-        <script src="gameCode/phaser/phaser.min.js"></script>
-        <script src="gameCode/boot.js"></script>
-        <script src="gameCode/load.js"></script>
-        <script src="gameCode/menu.js"></script>
-        <script src="gameCode/play.js"></script>
-        <script src="gameCode/win.js"></script>
-        <script src="gameCode/lose.js"></script>
-        <script src="gameCode/game.js"></script> 
-    </head>
-    <body>
-        <div id="gameAround"></div>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>The Knight Game</title>
+    <link rel="stylesheet" href="style/lp.min.css">
+</head>
+<body>
+    <header id="header">
+        <nav id="top-nav">
+            <div class="wrap">
+                <div class="logo">
+                    The Knight
+                </div>
+                <ul class="nav">
+                    <li><a href="#screenshots">Screenshots</a></li>
+                    <li><a href="#controls">Controls</a></li>
+                    <li><a href="#enemyes">Enemies</a></li>
+                    <li><a href="#items">Items</a></li>
+                </ul>
+                <div class="nav-hamb">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="nav-mobile">
+                    <ul>
+                        <li><a href="#screenshots">Screenshots</a></li>
+                        <li><a href="#controls">Controls</a></li>
+                        <li><a href="#enemyes">Enemies</a></li>
+                        <li><a href="#items">Items</a></li>
+                    </ul>
+                    <div class="nav-mobile-close">close menu</div>
+                </div>
+            </div>
+        </nav>
+        <div class="header-content">
+            <h1 class="game-name">The Knight</h1>
+            <div class="play-btn">
+                <a href="game.html">Play The Game</a>
+            </div>
+            <div class="description">
+                "The Knight" is a game about a general who is blinded by greed.
+                He lost all of his army hunting for treasures of the dungeon,
+                and now, crushed by sorrow and madness, he has even forgotten
+                his own name. All that he wishes now is to atone for his guilt
+                and to commit the remains of his brothers in arms to the ground.
+
+                The goal is to collect all of the remains on the level.
+                Otherwise you'll be forced to wander in the dungeon forever.
+
+            </div>
+        </div>
+    </header>
+    <section id="screenshots">
+        <h2 class="section-title">screenshots</h2>
+        <p class="section-desc">You can see how to "The Knight" looks like</p>
+        <div class="wrap">
+            <div class="screens">
+                <div class="item">
+                    <img src="assets/landingImg/screen1.jpg" alt="">
+                </div>
+                <div class="item">
+                    <img src="assets/landingImg/screen2.jpg" alt="">
+                </div>
+                <div class="item">
+                    <img src="assets/landingImg/screen3.jpg" alt="">
+                </div>
+                <div class="item">
+                    <img src="assets/landingImg/screen4.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="controls">
+        <h2 class="section-title">controls</h2>
+        <p class="section-desc">Manage the Knight is quite easy</p>
+        <div class="wrap">
+            <table>
+                <tr>
+                    <td class="title">Jump</td>
+                    <td><div class="button-key">&uarr;</div></td>
+                    <td><div class="button-key">W</div></td>
+                </tr>
+                <tr>
+                    <td class="title">Move left</td>
+                    <td><div class="button-key">&larr;</div></td>
+                    <td><div class="button-key">A</div></td>
+                </tr>
+                <tr>
+                    <td class="title">Move right</td>
+                    <td><div class="button-key">&rarr;</div></td>
+                    <td><div class="button-key">D</div></td>
+                </tr>
+                <tr>
+                    <td class="title">Attack</td>
+                    <td><div class="button-key">&darr;</div></td>
+                    <td><div class="button-space"></div></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+    <section id="enemyes">
+        <h2 class="section-title">enemies</h2>
+        <p class="section-desc">To know the enemy in person</p>
+        <div class="wrap">
+            <div class="enemy">
+                <div class="enemy-blob"></div>
+                <div class="enemy-desc">
+                    Blob. Concetrated darkness from another world.
+                    This filthy substance is invulnerable to your strikes, so just try
+                    to avoid it touching you.
+                </div>
+            </div>
+            <div class="enemy">
+                <div class="enemy-mummie"></div>
+                <div class="enemy-desc">
+                    Mummie. This place is cursed for sure! Living coprses are
+                    wandering everywhere shaking their dirty bandages, and they
+                    can't wait to tear you to pieces. Smash them with your hatchet
+                    with no regret!
+                </div>
+            </div>
+            <div class="enemy">
+                <div class="enemy-wizard"></div>
+                <div class="enemy-desc">
+                    Wizard. This nasty heretic will make a melee attack up
+                    close and try to get you with spells from afar.
+                    Acquaint him with your hatchet!
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="items">
+        <h2 class="section-title">items</h2>
+        <div class="wrap">
+            <div class="items-group">
+                <div class="health">
+                    <div class="health-img"></div>
+                    <div class="health-desc">Heart. Take them to increase tour health points</div>
+                </div>
+                <div class="star">
+                    <div class="star-img"></div>
+                    <div class="star-desc">Remains. Collect them to finish the game</div>
+                </div>
+            </div>
+            <div class="play-btn">
+                <a href="game.html">Play The Game</a>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="wrap">
+            Shift Team By RollingScopesSchool 2017
+        </div>
+    </footer>
+    <script src="gameCode/landingJs/bandle.min.js"></script>
+</body>
 </html>
