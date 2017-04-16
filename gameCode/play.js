@@ -16,6 +16,8 @@
     let stars;
     let hearts;
     let stoppers;
+    let lawa;
+    let water;
 
     let heartScale;
     let firstScaleHeartX = 150;
@@ -98,6 +100,11 @@ let playState = {
         stars = game.add.group();
         stars.enableBody = true;
 
+        lawa = game.add.group();
+        lawa.enableBody = true;
+        water = game.add.group();
+        water.enableBody = true;
+
         hearts = game.add.group();
         hearts.enableBody = true;
 
@@ -162,6 +169,8 @@ let playState = {
         game.physics.arcade.overlap(ghosts, player, this.enemyKills, null, this);
         game.physics.arcade.overlap(wizards, player, this.enemyKills, null, this);
         game.physics.arcade.overlap(mageBullets, player, this.bulletsKill, null, this);
+        game.physics.arcade.overlap(lawa, player, this.objectt, null, this);
+        game.physics.arcade.overlap(water, player, this.objectt, null, this);
 
 
         player.body.velocity.x = 0;
@@ -452,6 +461,10 @@ let playState = {
         }
 
     },
+
+    objectt: function (player, lawa) {
+        this.killPlayer();
+    },
     bulletLayer: function(mageBullets, layer) {
             mageBullet.kill();
     },
@@ -477,8 +490,13 @@ let playState = {
                 player.animations.add('rightKick', [8, 9, 10, 11], 8, true);
                 player.animations.add('leftKick', [12, 13, 14, 15], 8, true);
 
-            }
-            else if (Entity["name"] === "blob")
+            }else if (Entity["name"] === "stopper")
+            {
+                 let stopper = stoppers.create(Entity["x"], Entity["y"]);
+                 stopper.body.collideWorldBounds = true;
+                 stopper.body.immovable = true;
+                 stopper = game.add.sprite('stopper');
+            } else if (Entity["name"] === "blob")
             {
                 blob = blobs.create(Entity["x"], Entity["y"], bitMapData);
                 blob.body.collideWorldBounds = true;
@@ -509,12 +527,7 @@ let playState = {
                 heart.body.gravity.y = 300;
                 heart.body.bounce.y = 0.7 + Math.random() * 0.2;
 
-            } else if (Entity["name"] === "stopper")
-            {
-                 let stopper = stoppers.create(Entity["x"], Entity["y"]);
-                 stopper.body.collideWorldBounds = true;
-                 stopper.body.immovable = true;
-            } else if (Entity["name"] === "ghost")
+            }  else if (Entity["name"] === "ghost")
             {
                 ghost = ghosts.create(Entity["x"], Entity["y"], "ghost")
                 ghost.body.collideWorldBounds = true;
@@ -540,6 +553,20 @@ let playState = {
                     objArr.pop();
                 }
             }
+            else if (Entity["name"] === "lawa")
+            {
+                let newLawa = lawa.create(Entity["x"], Entity["y"]);
+                newLawa.body.collideWorldBounds = true;
+                newLawa.body.immovable = true;
+                newLawa.body.setSize(Entity["width"], Entity["height"])
+            }
+            else if (Entity["name"] === "water")
+            {
+                let newWater = water.create(Entity["x"], Entity["y"]);
+                newWater.body.collideWorldBounds = true;
+                newWater.body.immovable = true;
+                newWater.body.setSize(Entity["width"], Entity["height"])
+            }
         }
     },
 
@@ -555,7 +582,8 @@ let playState = {
         player.kill();
         heartScale["children"].pop();
         firstScaleHeartX -= 20;
-        player.reset(52, 52);
+        player.reset(52, 252);
+
     }
 }
 

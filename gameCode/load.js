@@ -22,10 +22,11 @@ let loadState = {
         game.load.image('game-over', 'assets/game-over.png');
         game.load.image('tiles', 'assets/levels/tiles.png');
 		game.load.image('tiles2', 'assets/levels/tiles2.png');
-        game.load.image('star', 'assets/star.png');
+        game.load.image('star', 'assets/skull.png');
         game.load.image('blob', 'assets/ball.png');
         game.load.image('dungeon', 'assets/dungeon.png');
         game.load.image('heart', 'assets/health.png');
+		game.load.image('stopper', 'assets/stopper.png');
         game.load.atlasJSONArray('dude', 'assets/knight1.png', 'assets/knight1.json');
         game.load.atlasJSONArray('zombie', 'assets/zombie1.png', 'assets/zombie1.json');
         game.load.atlasJSONArray('ghost', 'assets/ghost.png', 'assets/ghost.json');
