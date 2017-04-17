@@ -9,7 +9,8 @@
     let background;
     let level;
     let tiles;
-
+    let winSt;
+    let coll;
     let player;
     let playerX;
     let blobs;
@@ -132,7 +133,7 @@ let playState = {
         mageBullets.setAll('checkWorldBounds', true);
 
 
-        scoreText = game.add.text(16, 16, 'Remains: 0/75', { fontSize: '18px', fill: '#fff' });
+        scoreText = game.add.text(16, 16, 'Remains: 0/ '+ winSt, { fontSize: '18px', fill: '#fff' });
         scoreText.fixedToCamera = true;
 
         heartScale = game.add.group();
@@ -142,7 +143,7 @@ let playState = {
         this.threeLives();
 
         cursors = game.input.keyboard.createCursorKeys();
-        keys = game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W,'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D, 'kick':Phaser.Keyboard.SPACEBAR, /*'suicide': Phaser.KeyCode.S*/});
+        keys = game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W,'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D, 'kick':Phaser.Keyboard.SPACEBAR});
         this.enetetiesPositioning();
 	},
 
@@ -227,10 +228,7 @@ let playState = {
             player.body.velocity.y = -500;
             jumpTimer = game.time.now + 900;
         }
-        // else if (keys.suicide.isDown)
-        // {
-        //     this.killPlayer();
-        // }
+
         else
         {
             //  Stand idle
@@ -272,7 +270,7 @@ let playState = {
         star.kill();
         //  Add and update the score
         score++;
-        scoreText.text = 'Remains: ' + score + '/75';
+        scoreText.text = 'Remains: ' + score + '/'+ winSt;
 	},
 
 
@@ -290,14 +288,7 @@ let playState = {
             enemyDeadSound.play();
             blob.kill();
         }
-        // else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
-        // && player.body.x < blob.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
-        // && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
-        // {
-        //     enemyDeadSound.play();
-        //     blob.kill();
-        // }
-        else {
+        else  if (Math.abs(blob.body.x - player.body.x) < 10) {
             this.killPlayer();
         }
     },
@@ -575,4 +566,6 @@ let playState = {
 playState.init = function (data) {
     level = data.level;
     tiles = data.tiles;
+    winSt = data.winState;
+    coll = data.coll;
 };
