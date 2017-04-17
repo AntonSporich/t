@@ -60,6 +60,7 @@
     let mageBullet;
     let mageBullets;
     let firingTimer = 0;
+    let objArr;
 
 let playState = {
 	create: function() {
@@ -74,7 +75,7 @@ let playState = {
         let arr = [song1, song2, song3];
 
         nowPlaying = arr[Math.round(0- 0.5 + Math.random() * ((arr.length - 1) - 0 + 1))].play();
-        nowPlaying.loopFull(0.6)
+        nowPlaying.loopFull(0.05)
 
         playerDeadSound = game.add.audio('playerDead');
         playerDeadSound.volume = 0.03;
@@ -99,6 +100,9 @@ let playState = {
 
         stars = game.add.group();
         stars.enableBody = true;
+
+        stoppers = game.add.group();
+        stoppers.enableBody = true;
 
         lawa = game.add.group();
         lawa.enableBody = true;
@@ -128,11 +132,6 @@ let playState = {
         mageBullets.setAll('checkWorldBounds', true);
 
 
-        stoppers = game.add.group();
-        stoppers.enableBody = true;
-
-        this.enetetiesPositioning();
-
         scoreText = game.add.text(16, 16, 'Remains: 0/666', { fontSize: '18px', fill: '#fff' });
         scoreText.fixedToCamera = true;
 
@@ -144,9 +143,16 @@ let playState = {
 
         cursors = game.input.keyboard.createCursorKeys();
         keys = game.input.keyboard.addKeys( { 'up': Phaser.KeyCode.W,'left': Phaser.KeyCode.A, 'right': Phaser.KeyCode.D, 'kick':Phaser.Keyboard.SPACEBAR, /*'suicide': Phaser.KeyCode.S*/});
+        this.enetetiesPositioning();
 	},
 
 	update: function() {
+        game.physics.arcade.collide(stoppers, layer);
+        game.physics.arcade.collide(blobs, stoppers);
+        game.physics.arcade.collide(zombies, stoppers);
+        game.physics.arcade.collide(wizards, stoppers);
+        game.physics.arcade.collide(stars, stoppers);
+
 		game.physics.arcade.collide(stars, layer);
         game.physics.arcade.collide(hearts, layer)
         game.physics.arcade.collide(blobs, layer);
@@ -155,12 +161,6 @@ let playState = {
         game.physics.arcade.collide(wizards, layer);
         game.physics.arcade.collide(mageBullets, layer, this.bulletLayer);
         game.physics.arcade.collide(player, layer);
-        game.physics.arcade.collide(stoppers, layer);
-
-        game.physics.arcade.collide(stoppers, blobs);
-        game.physics.arcade.collide(stoppers, zombies);
-        game.physics.arcade.collide(stoppers, wizards);
-        game.physics.arcade.collide(stoppers, stars);
 
         game.physics.arcade.overlap(stars, player, this.collectStar, null, this);
         game.physics.arcade.overlap(hearts, player, this.collectHealth, null, this);
@@ -242,22 +242,6 @@ let playState = {
                 player.frame = 1;
             }
         }
-        // Enemy begins to follow the player if he's too close
-
-        // let diff = player.body.x - blob.body.x;
-        // if (player.body.y -blob.body.y < -135)
-        // {
-        //     blob.body.velocity.x = 0;
-        // } else if (diff >= 150 || diff <= -150)
-        // {
-        //     blob.body.velocity.x = 0;
-        // } else if (diff < 0)
-        // {
-        //      blob.body.velocity.x = -120;
-        // } else if (diff > 0)
-        // {
-        //    blob.body.velocity.x = 120;
-        // }
 
         //Lose and win
         if (heartScale["children"].length === 0)
@@ -279,6 +263,7 @@ let playState = {
         this.UpdateZombie();
         this.UpdateGhost();
         this.UpdateWizard();
+
 	},
 
 	collectStar: function (player, star) {
@@ -374,6 +359,10 @@ let playState = {
 
     UpdateZombie: function  () {
         for(key in zombies.children) {
+            if (!zombies.children[key].body.velocity.x) {
+                zombieX *= -1;
+                zombies.children[key].body.velocity.x = zombieX;
+            }
             if(Math.abs(zombies.children[key].body.x - player.body.x) < 150 && Math.abs(zombies.children[key].body.y - player.body.y) < 60) {
                 if(zombies.children[key].body.x > player.body.x) {
                     zombies.children[key].body.velocity.x = - 180;
@@ -382,10 +371,7 @@ let playState = {
                     zombies.children[key].body.velocity.x =  180;
                 }
             }
-                if (!zombies.children[key].body.velocity.x) {
-                    zombieX *= -1;
-                    zombies.children[key].body.velocity.x = zombieX;
-                }
+
 
                 if(zombies.children[key].body.velocity.x < 0) {
                     zombies.children[key].animations.play('moveLeft');
@@ -398,7 +384,7 @@ let playState = {
 
     UpdateGhost: function () {
         for(key in ghosts.children) {
-            if(Math.abs(ghosts.children[key].body.x - player.body.x) < 200 && Math.abs(ghosts.children[key].body.y - player.body.y) < 60) {
+            if(Math.abs(ghosts.children[key].body.x - player.body.x) < 150 && Math.abs(ghosts.children[key].body.y - player.body.y) < 60) {
                 if(ghosts.children[key].body.x > player.body.x) {
                     ghosts.children[key].animations.play('attakLeft');
                     ghosts.children[key].body.velocity.x = - 250;
@@ -424,7 +410,7 @@ let playState = {
                 else if (wizards.children[key].body.velocity.x > 0) {
                     wizards.children[key].animations.play('moveRight');
                 }
-                if(Math.abs(wizards.children[key].body.x - player.body.x) < 400 && Math.abs(wizards.children[key].body.y - player.body.y) < 20) {
+                if(Math.abs(wizards.children[key].body.x - player.body.x) < 350 && Math.abs(wizards.children[key].body.y - player.body.y) < 20) {
                     if (game.time.now > firingTimer) {
                         mageBullet = mageBullets.create(wizards.children[key].body.x, (wizards.children[key].body.y + 10), 'mageBullet')
                         if(mageBullet.body.x > player.body.x) {
@@ -471,7 +457,7 @@ let playState = {
 
     enetetiesPositioning: function () {
 
-        let objArr = map["objects"]["Object Layer 1"];
+        objArr = map["objects"]["Object Layer 1"];
 
         for (let i = 0; i < objArr.length; i++)
         {
@@ -495,7 +481,6 @@ let playState = {
                  let stopper = stoppers.create(Entity["x"], Entity["y"]);
                  stopper.body.collideWorldBounds = true;
                  stopper.body.immovable = true;
-                 stopper = game.add.sprite('stopper');
             } else if (Entity["name"] === "blob")
             {
                 blob = blobs.create(Entity["x"], Entity["y"], bitMapData);
