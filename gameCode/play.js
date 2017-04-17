@@ -132,7 +132,7 @@ let playState = {
         mageBullets.setAll('checkWorldBounds', true);
 
 
-        scoreText = game.add.text(16, 16, 'Remains: 0/666', { fontSize: '18px', fill: '#fff' });
+        scoreText = game.add.text(16, 16, 'Remains: 0/75', { fontSize: '18px', fill: '#fff' });
         scoreText.fixedToCamera = true;
 
         heartScale = game.add.group();
@@ -251,7 +251,7 @@ let playState = {
             game.state.start('lose');
         }
 
-        if (score === 55)
+        if (score === 75)
         {
             nowPlaying.stop();
             score = 0;
@@ -272,7 +272,7 @@ let playState = {
         star.kill();
         //  Add and update the score
         score++;
-        scoreText.text = 'Remains: ' + score + '/666';
+        scoreText.text = 'Remains: ' + score + '/75';
 	},
 
 
@@ -290,13 +290,13 @@ let playState = {
             enemyDeadSound.play();
             blob.kill();
         }
-        else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
-        && player.body.x < blob.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
-        && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
-        {
-            enemyDeadSound.play();
-            blob.kill();
-        }
+        // else if((cursors.down.isDown || keys.kick.isDown) && playerX === 1
+        // && player.body.x < blob.body.x && (!cursors.down.downDuration(100) && !keys.kick.downDuration(100))
+        // && (cursors.down.downDuration(500) || keys.kick.downDuration(500)))
+        // {
+        //     enemyDeadSound.play();
+        //     blob.kill();
+        // }
         else {
             this.killPlayer();
         }
